@@ -1,14 +1,20 @@
 import express from "express";
-import { singupUser } from "../controllers/userControllers.js";
+import {
+  getCurrent,
+  logoutUser,
+  singinUser,
+  singupUser,
+} from "../controllers/userControllers.js";
 import validateBody from "../helpers/validateBody.js";
-import { signupSchema } from "../schemas/userSchemas.js";
+import { signupSchema, singinSchema } from "../schemas/userSchemas.js";
+import { authenticate } from "../middlewares/authenticate.js";
 
 export const usersRouter = express.Router();
 
-usersRouter.post("/signup", validateBody(signupSchema), singupUser);
+usersRouter.post("/singup", validateBody(signupSchema), singupUser);
 
-usersRouter.post("/signin");
+usersRouter.post("/singin", validateBody(singinSchema), singinUser);
 
-usersRouter.post("/logout");
+usersRouter.post("/logout", authenticate, logoutUser);
 
-usersRouter.get("/current");
+usersRouter.get("/current", authenticate, getCurrent);

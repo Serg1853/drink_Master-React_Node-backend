@@ -44,6 +44,44 @@ export const singupUser = async (req, res, next) => {
   }
 };
 
-export const singinUser = async (req, res, next) => {};
+export const singinUser = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      throw HttpError(401, "Email or password is wrong");
+    }
 
-export const logoutUser = async (req, res, next) => {};
+    const passwordCompare = await bcrypt.compare(password, user.password);
+    if (!passwordCompare) {
+      throw HttpError(401, "Email or password is wrong");
+    }
+    const payload = {
+      id: user._id,
+    };
+    const token = jwt.sign(payload, SECRET_KEY);
+    await User.findByIdAndUpdate(user._id, { token });
+    res.status(200).json({
+      token,
+      user: {
+        name: user.name,
+        email,
+        avatarURL: user.avatarURL,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getCurrent = (req, res) => {
+  const { email, name, avatar: avatarURL } = req.user;
+  res.status(200).json({ email, name, avatarURL });
+};
+
+export const logoutUser = async (req, res) => {
+  const { _id } = req.user;
+
+  await User.findByIdAndUpdate(_id, { token: "" });
+  res.status(204).json();
+};
