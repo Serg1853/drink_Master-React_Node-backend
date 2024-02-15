@@ -85,3 +85,22 @@ export const logoutUser = async (req, res) => {
   await User.findByIdAndUpdate(_id, { token: "" });
   res.status(204).json();
 };
+
+export const updateAvatar = async (req, res, next) => {
+  try {
+    const { _id } = req.user;
+    const { file } = req;
+    if (!file) {
+      throw HttpError(400, "You need file");
+    }
+    const { path: tempUpload, originalname } = file;
+    const newName = `${_id}${originalname}`;
+    const resultUpload = path.resolve("public", "avatars", newName);
+    await fs.rename(tempUpload, resultUpload);
+    const avatar = path.join("avatars", newName);
+    await User.findByIdAndUpdate(_id, { avatar }, { new: true });
+    res.status(200).json({ avatar });
+  } catch (error) {
+    next(error);
+  }
+};
