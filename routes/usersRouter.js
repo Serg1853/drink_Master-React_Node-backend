@@ -6,7 +6,7 @@ const {
 	singupUser,
 	updateAvatar,
 } = require("../controllers/userControllers");
-const validateBody = require("../helpers/validateBody");
+const validateBody = require("../middlewares/validateBody");
 const { signupSchema, singinSchema } = require("../schemas/userSchemas");
 const authenticate = require("../middlewares/authenticate");
 const storage = require("../middlewares/upload");
