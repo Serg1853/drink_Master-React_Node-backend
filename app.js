@@ -1,10 +1,11 @@
-import express from "express";
-import morgan from "morgan";
-import cors from "cors";
-import dotenv from "dotenv";
-import { usersRouter } from "./routes/usersRouter.js";
+const express = require("express");
+const morgan = require("morgan");
+const cors = require("cors");
+const swaggerUi = require("swagger-ui-express");
+const swaggerDoc = require("./swagger.json");
+const { usersRouter } = require("./routes/usersRouter");
+require("dotenv").config();
 
-dotenv.config();
 const app = express();
 
 app.use(morgan("tiny"));
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use(express.static("public"));
 
 app.use("/users", usersRouter);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
 app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
@@ -23,4 +25,4 @@ app.use((req, res) => {
   res.status(status).json({ message });
 });
 
-export default app;
+module.exports = app;

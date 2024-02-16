@@ -1,10 +1,14 @@
-import jwt from "jsonwebtoken";
-import HttpError from "../helpers/HttpError.js";
-import { User } from "../models/User.js";
+const jwt = require("jsonwebtoken");
+const HttpError = require("../helpers/HttpError");
+const { User } = require("../models/User");
+
+// import jwt from "jsonwebtoken";
+// import HttpError from "../helpers/HttpError.js";
+// import { User } from "../models/User.js";
 
 const { SECRET_KEY } = process.env;
 
-export const authenticate = async (req, res, next) => {
+const authenticate = async (req, res, next) => {
   const { authorization = "" } = req.headers;
   const [bearer, token] = authorization.split(" ");
   if (bearer !== "Bearer") {
@@ -24,3 +28,5 @@ export const authenticate = async (req, res, next) => {
     next(HttpError(401));
   }
 };
+
+module.exports = authenticate;

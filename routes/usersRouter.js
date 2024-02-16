@@ -1,17 +1,30 @@
-import express from "express";
-import {
+const express = require("express");
+const {
   getCurrent,
   logoutUser,
   singinUser,
   singupUser,
   updateAvatar,
-} from "../controllers/userControllers.js";
-import validateBody from "../helpers/validateBody.js";
-import { signupSchema, singinSchema } from "../schemas/userSchemas.js";
-import { authenticate } from "../middlewares/authenticate.js";
-import { storage } from "../middlewares/upload.js";
+} = require("../controllers/userControllers");
+const validateBody = require("../helpers/validateBody");
+const { signupSchema, singinSchema } = require("../schemas/userSchemas");
+const { authenticate } = require("../middlewares/authenticate");
+const { storage } = require("../middlewares/upload");
 
-export const usersRouter = express.Router();
+// import express from "express";
+// import {
+//   getCurrent,
+//   logoutUser,
+//   singinUser,
+//   singupUser,
+//   updateAvatar,
+// } from "../controllers/userControllers.js";
+// import validateBody from "../helpers/validateBody.js";
+// import { signupSchema, singinSchema } from "../schemas/userSchemas.js";
+// import { authenticate } from "../middlewares/authenticate.js";
+// import { storage } from "../middlewares/upload.js";
+
+const usersRouter = express.Router();
 
 usersRouter.post("/singup", validateBody(signupSchema), singupUser);
 
@@ -27,3 +40,5 @@ usersRouter.patch(
   storage.single("avatar"),
   updateAvatar
 );
+
+module.exports = usersRouter;

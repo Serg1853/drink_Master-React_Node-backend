@@ -1,0 +1,27 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "WaterTracker",
+    "description": "Swagger documentation for project WaterTracker"
+  },
+  "servers": [
+    {
+      "url": "https://watertracker-by-group5.onrender.com/api"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Auth endpoints"
+    },
+    {
+      "name": "User",
+      "description": "User endpoints"
+    },
+    {
+      "name": "Water",
+      "description": "Water endpoints"
+    }
+  ]
+}

@@ -1,15 +1,24 @@
-import HttpError from "../helpers/HttpError.js";
-import gravatar from "gravatar";
-import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
-import path from "path";
-import fs from "fs/promises";
-import { User } from "../models/User.js";
-import dotenv from "dotenv";
-dotenv.config();
+const { HttpError } = require("../helpers");
+const gravatar = require("gravatar");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+const path = require("path");
+const fs = require("fs/promises");
+const { User } = require("../models/User");
+require("dotenv").config();
+
+// import HttpError from "../helpers/HttpError.js";
+// import gravatar from "gravatar";
+// import jwt from "jsonwebtoken";
+// import bcrypt from "bcrypt";
+// import path from "path";
+// import fs from "fs/promises";
+// import { User } from "../models/User.js";
+// import dotenv from "dotenv";
+// dotenv.config();
 const { SECRET_KEY } = process.env;
 
-export const singupUser = async (req, res, next) => {
+const singupUser = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
     const user = await User.findOne({ email });
@@ -44,7 +53,7 @@ export const singupUser = async (req, res, next) => {
   }
 };
 
-export const singinUser = async (req, res, next) => {
+const singinUser = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
@@ -74,19 +83,19 @@ export const singinUser = async (req, res, next) => {
   }
 };
 
-export const getCurrent = (req, res) => {
+const getCurrent = (req, res) => {
   const { email, name, avatar: avatarURL } = req.user;
   res.status(200).json({ email, name, avatarURL });
 };
 
-export const logoutUser = async (req, res) => {
+const logoutUser = async (req, res) => {
   const { _id } = req.user;
 
   await User.findByIdAndUpdate(_id, { token: "" });
   res.status(204).json();
 };
 
-export const updateAvatar = async (req, res, next) => {
+const updateAvatar = async (req, res, next) => {
   try {
     const { _id } = req.user;
     const { file } = req;
@@ -103,4 +112,12 @@ export const updateAvatar = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+};
+
+module.exports = {
+  updateAvatar,
+  logoutUser,
+  getCurrent,
+  singinUser,
+  singupUser,
 };
