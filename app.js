@@ -3,6 +3,7 @@ const morgan = require("morgan");
 const cors = require("cors");
 const swaggerUi = require("swagger-ui-express");
 const swaggerDoc = require("./swagger.json");
+const filtersRouter = require("./routes/filtersRouter");
 const usersRouter = require("./routes/usersRouter");
 require("dotenv").config();
 
@@ -14,15 +15,16 @@ app.use(express.json());
 app.use(express.static("public"));
 
 app.use("/users", usersRouter);
+app.use("/filters", filtersRouter);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
 app.use((req, res) => {
-  res.status(404).json({ message: "Route not found" });
+	res.status(404).json({ message: "Route not found" });
 });
 
 app.use((req, res) => {
-  const { status = 500, message = "Server error" } = err;
-  res.status(status).json({ message });
+	const { status = 500, message = "Server error" } = err;
+	res.status(status).json({ message });
 });
 
 module.exports = app;
