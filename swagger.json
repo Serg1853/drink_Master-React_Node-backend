@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://watertracker-by-group5.onrender.com/api"
+      "url": "https://localhost:3030/api"
     }
   ],
   "tags": [
@@ -18,10 +18,7 @@
     {
       "name": "User",
       "description": "User endpoints"
-    },
-    {
-      "name": "Water",
-      "description": "Water endpoints"
     }
   ]
 }
+

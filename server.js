@@ -1,9 +1,6 @@
 const app = require("./app");
 require("dotenv").config();
 const connectDb = require("./helpers/connectDb");
-// import app from "./app.js";
-// import dotenv from "dotenv";
-// import { connectDb } from "./helpers/connectDb.js";
 
 const { PORT } = process.env;
 
