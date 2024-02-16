@@ -1,6 +1,6 @@
 const app = require("./app");
 require("dotenv").config();
-const connectDb = require("./helpers/connectDb");
+const { connectDb } = require("./helpers");
 
 const { PORT } = process.env;
 
