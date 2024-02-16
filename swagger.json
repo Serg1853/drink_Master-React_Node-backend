@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "version": "1.0.0",
-    "title": "WaterTracker",
-    "description": "Swagger documentation for project WaterTracker"
+    "title": "Drink-Master",
+    "description": "Swagger documentation for project Drink-Master"
   },
   "servers": [
     {
