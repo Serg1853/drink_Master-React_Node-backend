@@ -1,21 +1,13 @@
-const { HttpError } = require("../helpers");
+const bcrypt = require("bcrypt");
 const gravatar = require("gravatar");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
 const path = require("path");
 const fs = require("fs/promises");
 const { User } = require("../models/User");
+const { HttpError } = require("../helpers/HttpError");
+
 require("dotenv").config();
 
-// import HttpError from "../helpers/HttpError.js";
-// import gravatar from "gravatar";
-// import jwt from "jsonwebtoken";
-// import bcrypt from "bcrypt";
-// import path from "path";
-// import fs from "fs/promises";
-// import { User } from "../models/User.js";
-// import dotenv from "dotenv";
-// dotenv.config();
 const { SECRET_KEY } = process.env;
 
 const singupUser = async (req, res, next) => {

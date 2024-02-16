@@ -1,5 +1,4 @@
 const Joi = require("joi");
-// import Joi from "joi";
 
 const emailRegexp = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 
@@ -30,4 +29,4 @@ const singinSchema = Joi.object({
     .messages({ "any.required": "missing required password field" }),
 });
 
-module.exports = { singinSchema, verifyEmailSchema, signupSchema };
+module.exports = { signupSchema, verifyEmailSchema, singinSchema };

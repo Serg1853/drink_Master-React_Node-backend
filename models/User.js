@@ -1,9 +1,7 @@
 const { Schema, model } = require("mongoose");
-const { handleMongooseError } = require("../helpers/handleMongooseError");
-// import { Schema, model } from "mongoose";
-// import { handleMongooseError } from "../helpers/index.js";
+const handleMongooseError = require("../helpers/handleMongooseError");
 
-const emailRegexp = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+const emailRegexp = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 
 const userSchema = new Schema(
   {
@@ -37,4 +35,4 @@ userSchema.post("save", handleMongooseError);
 
 const User = model("user", userSchema);
 
-module.exports = User;
+module.exports = { User };
