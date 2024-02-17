@@ -1,6 +1,7 @@
 const express = require("express");
 const ctrl = require("../controllers/filtersDrinksControllers");
-const authenticate = require("../middlewares/authenticate");
+
+// const authenticate = require("../middlewares/authenticate");
 
 const filtersDrinksRouter = express.Router();
 
