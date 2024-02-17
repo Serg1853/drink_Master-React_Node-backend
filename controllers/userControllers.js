@@ -14,7 +14,7 @@ const { SECRET_KEY } = process.env;
 
 const avatarDir = path.join(__dirname, "../", "public", "avatars");
 
-const singupUser = async (req, res, next) => {
+const signupUser = async (req, res, next) => {
   const { name, email, password } = req.body;
   const user = await User.findOne({ email });
 
@@ -45,7 +45,7 @@ const singupUser = async (req, res, next) => {
   });
 };
 
-const singinUser = async (req, res, next) => {
+const signinUser = async (req, res, next) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
   if (!user) {
@@ -110,8 +110,8 @@ const updateAvatar = async (req, res) => {
 };
 
 module.exports = {
-  singupUser: ctrlWrapper(singupUser),
-  singinUser: ctrlWrapper(singinUser),
+  signupUser: ctrlWrapper(signupUser),
+  signinUser: ctrlWrapper(signinUser),
   updateAvatar: ctrlWrapper(updateAvatar),
   logoutUser,
   getCurrent,

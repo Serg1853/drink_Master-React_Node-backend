@@ -2,23 +2,430 @@
   "openapi": "3.1.0",
   "info": {
     "version": "1.0.0",
-    "title": "Drink-Master",
+    "title": "Drink-Master API docs - OpenAPI 3.1",
     "description": "Swagger documentation for project Drink-Master"
   },
   "servers": [
     {
-      "url": "https://localhost:3030/api"
+      "url": "https://localhost:3030"
     }
   ],
   "tags": [
     {
       "name": "Auth",
-      "description": "Auth endpoints"
+      "description": "Authorization endpoints"
     },
     {
       "name": "User",
       "description": "User endpoints"
     }
-  ]
-}
+  ],
+  "paths": {
+    "/users/signup": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User registration",
+        "description": "Register new user",
+        "requestBody": {
+          "description": "Registration's object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignUpRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "$ref": "#/components/responses/SignUpResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "409": {
+            "$ref": "#/components/responses/EmailInUse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/users/signin": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User login",
+        "description": "Login existed user",
+        "requestBody": {
+          "description": "Login object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignInRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/SignInResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/InvalidCredentials"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/user/logout": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User logout",
+        "description": "Logout existed user",
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The user is logged out"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/user/current": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Get information about the current user",
+        "description": "Get information about the current user",
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CurrentUserResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/users/avatars": {
+      "patch": {
+        "tags": ["User"],
+        "summary": "Add or update user avatar",
+        "description": "Add or update user avatar",
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "requestBody": {
+          "description": "User avatar image",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "avatarURL": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "User's avatar image file"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/AvatarsResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    }
+  },
 
+  "components": {
+    "responses": {
+      "Unauthorized": {
+        "description": "User must be logged in to perfotm this action (401)",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "examples": ["Not authorized"]
+                }
+              }
+            }
+          }
+        }
+      },
+      "InvalidCredentials": {
+        "description": "Invalid email or password (401)",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "examples": ["Invalid email or password"]
+                }
+              }
+            }
+          }
+        }
+      },
+      "EmailInUse": {
+        "description": "Email in use (409)",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "examples": ["Email in use"]
+                }
+              }
+            }
+          }
+        }
+      },
+      "ServerError": {
+        "description": "Server error (500)",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "examples": ["Server error"]
+                }
+              }
+            }
+          }
+        }
+      },
+      "BadRequest": {
+        "description": "Bad request - invalid request body (400)",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "SignUpResponse": {
+        "description": "User successfully registered",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "_id": {
+                  "type": "string",
+                  "description": "Backend-generated unique identifier",
+                  "examples": ["65cce18f4df19108f425586d"]
+                },
+                "token": {
+                  "type": "string",
+                  "description": "Bearer token",
+                  "examples": [
+                    " eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1Y2NlMThmNGRmMTkxMDhmNDI1NTg2ZCIsImlhdCI6MTcwODA5NDg2NX0.bHdV2mw9Xfz1PxzB54rz9_8IpgkTeAyuzGRzP-j3FOg"
+                  ]
+                },
+                "user": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string",
+                      "description": "User's email",
+                      "format": "email"
+                    },
+                    "avatarURL": {
+                      "type": "string",
+                      "description": "User avatar path",
+                      "examples": [
+                        "//www.gravatar.com/avatar/97d3723787b96f4804a076d9d009dfdf"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "SignInResponse": {
+        "description": "User successfully logged in",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "_id": {
+                  "type": "string",
+                  "description": "Backend-generated unique identifier",
+                  "examples": ["65cce18f4df19108f425586d"]
+                },
+                "token": {
+                  "type": "string",
+                  "description": "Bearer token",
+                  "examples": [
+                    " eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1Y2NlMThmNGRmMTkxMDhmNDI1NTg2ZCIsImlhdCI6MTcwODA5NDg2NX0.bHdV2mw9Xfz1PxzB54rz9_8IpgkTeAyuzGRzP-j3FOg"
+                  ]
+                },
+                "user": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      },
+      "CurrentUserResponse": {
+        "description": "Information about user",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/User"
+            }
+          }
+        }
+      },
+      "AvatarsResponse": {
+        "description": "The user's avatar is updated",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "description": "User avatar file",
+              "properties": {
+                "avatarURL": {
+                  "type": "string",
+                  "description": "User avatar path",
+                  "examples": [
+                    "//www.gravatar.com/avatar/97d3723787b96f4804a076d9d009dfdf"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 32,
+            "examples": ["Max Payne"]
+          },
+          "avatarURL": {
+            "type": "string",
+            "description": "User avatar path",
+            "examples": [
+              "//www.gravatar.com/avatar/97d3723787b96f4804a076d9d009dfdf"
+            ]
+          }
+        }
+      },
+      "SignUpRequest": {
+        "type": "object",
+        "required": ["name", "email", "password"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 32,
+            "examples": ["Max Payne"]
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 64,
+            "description": "User's password",
+            "format": "password",
+            "examples": ["qwerty123"]
+          }
+        }
+      },
+      "SignInRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 64,
+            "description": "User's password",
+            "format": "password",
+            "examples": ["qwerty123"]
+          }
+        }
+      }
+    }
+  }
+}

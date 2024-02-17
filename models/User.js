@@ -7,11 +7,13 @@ const userSchema = new Schema(
   {
     name: {
       type: String,
+      minLength: [2, "Name must be at least 2 characters long"],
+      maxLength: [32, "Name must be max 32 characters long"],
       required: true,
     },
     email: {
       type: String,
-      match: emailRegexp,
+      match: [emailRegexp, "Email is incorrect"],
       required: [true, "Email is required"],
       unique: true,
     },

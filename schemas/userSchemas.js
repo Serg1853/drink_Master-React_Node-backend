@@ -19,7 +19,7 @@ const verifyEmailSchema = Joi.object({
     .messages({ "any.required": "missing required field email" }),
 });
 
-const singinSchema = Joi.object({
+const signinSchema = Joi.object({
   email: Joi.string().pattern(emailRegexp).required().messages({
     "any.required": "missing required email field, example: ivan@gmail.com",
   }),
@@ -29,4 +29,4 @@ const singinSchema = Joi.object({
     .messages({ "any.required": "missing required password field" }),
 });
 
-module.exports = { signupSchema, verifyEmailSchema, singinSchema };
+module.exports = { signupSchema, verifyEmailSchema, signinSchema };

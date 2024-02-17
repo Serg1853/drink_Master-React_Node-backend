@@ -1,21 +1,21 @@
 const express = require("express");
 const {
-	getCurrent,
-	logoutUser,
-	singinUser,
-	singupUser,
-	updateAvatar,
+  getCurrent,
+  logoutUser,
+  signinUser,
+  signupUser,
+  updateAvatar,
 } = require("../controllers/userControllers");
 const validateBody = require("../middlewares/validateBody");
-const { signupSchema, singinSchema } = require("../schemas/userSchemas");
+const { signupSchema, signinSchema } = require("../schemas/userSchemas");
 const authenticate = require("../middlewares/authenticate");
 const storage = require("../middlewares/upload");
 
 const usersRouter = express.Router();
 
-usersRouter.post("/singup", validateBody(signupSchema), singupUser);
+usersRouter.post("/signup", validateBody(signupSchema), signupUser);
 
-usersRouter.post("/singin", validateBody(singinSchema), singinUser);
+usersRouter.post("/signin", validateBody(signinSchema), signinUser);
 
 usersRouter.post("/logout", authenticate, logoutUser);
 
