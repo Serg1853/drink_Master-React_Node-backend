@@ -8,11 +8,12 @@ const Jimp = require("jimp");
 const { User } = require("../models/User");
 const { HttpError, ctrlWrapper } = require("../helpers");
 
+
 require("dotenv").config();
 
 const { SECRET_KEY } = process.env;
 
-const avatarDir = path.join(__dirname, "../", "public", "avatars");
+// const avatarDir = path.join(__dirname, "../", "public", "avatars");
 
 const signupUser = async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -36,6 +37,7 @@ const signupUser = async (req, res, next) => {
   const token = jwt.sign(payload, SECRET_KEY);
   await User.findByIdAndUpdate(newUser._id, { token });
   res.status(201).json({
+    // _id,
     token,
     user: {
       name,
@@ -109,10 +111,21 @@ const updateAvatar = async (req, res) => {
   });
 };
 
+const updateSubscription = async (req, res) => {
+  const { _id } = req.user;
+  const result = await User.findByIdAndUpdate(_id, req.body, { new: true });
+
+  if (!result) {
+    throw HttpError(404, "Not found");
+  }
+  res.json(result);
+};
+
 module.exports = {
   signupUser: ctrlWrapper(signupUser),
   signinUser: ctrlWrapper(signinUser),
   updateAvatar: ctrlWrapper(updateAvatar),
+  updateSubscription:ctrlWrapper(updateSubscription),
   logoutUser,
   getCurrent,
 };

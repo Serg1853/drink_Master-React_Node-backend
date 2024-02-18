@@ -1,6 +1,10 @@
 const Joi = require("joi");
 
 const emailRegexp = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+const subscriptionList = [
+  "agree to subscription",
+  "do not agree to subscription",
+];
 
 const signupSchema = Joi.object({
   name: Joi.string().required(),
@@ -28,5 +32,15 @@ const signinSchema = Joi.object({
     .min(6)
     .messages({ "any.required": "missing required password field" }),
 });
+const subscriptionListSchema = Joi.object({
+  subscription: Joi.string()
+    .valid(...subscriptionList)
+    .required(),
+});
 
-module.exports = { signupSchema, verifyEmailSchema, signinSchema };
+module.exports = {
+  signupSchema,
+  verifyEmailSchema,
+  signinSchema,
+  subscriptionListSchema,
+};

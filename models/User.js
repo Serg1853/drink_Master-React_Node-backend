@@ -2,7 +2,10 @@ const { Schema, model } = require("mongoose");
 const handleMongooseError = require("../helpers/handleMongooseError");
 
 const emailRegexp = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-
+const subscriptionList = [
+  "agree to subscription",
+  "do not agree to subscription",
+];
 const userSchema = new Schema(
   {
     name: {
@@ -20,6 +23,11 @@ const userSchema = new Schema(
     password: {
       type: String,
       required: true,
+    },
+    subscription: {
+      type: String,
+      enum: subscriptionList,
+      default: "agree to subscription",
     },
     token: {
       type: String,
