@@ -1,6 +1,7 @@
 const ctrlWrapper = require("../helpers/ctrlWrapper");
 const categories = require("../models/categories");
 const containers = require("../models/containers");
+const Ingredient = require("../models/Ingredient");
 
 const getCategoriesController = async (req, res) => {
 	const result = await categories.getCategories();
@@ -12,7 +13,10 @@ const getContainersController = async (req, res) => {
 	res.json(result);
 };
 
-const getIngredientsController = async (req, res) => {};
+const getIngredientsController = async (req, res) => {
+    const result = await Ingredient.find();
+	res.json(result);
+};
 
 module.exports = {
 	getCategoriesController: ctrlWrapper(getCategoriesController),
