@@ -7,9 +7,9 @@ const getAll = async (req, res) => {
 };
 
 const getById = async (req, res, next) => {
-  const { _id } = req.params;
+  const { id } = req.params;
 
-  const result = await Ingredient.findOne({ _id });
+  const result = await Ingredient.findOne({ _id: id });
   if (result === null) {
     throw HttpError(404, "Not found");
   }
