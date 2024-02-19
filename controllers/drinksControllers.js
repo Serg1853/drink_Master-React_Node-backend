@@ -9,7 +9,7 @@ const getAll = async (req, res) => {
 const getById = async (req, res, next) => {
   const { _id } = req.params;
 
-  const result = await Contact.findOne({ _id });
+  const result = await Ingredient.findOne({ _id });
   if (result === null) {
     throw HttpError(404, "Not found");
   }
