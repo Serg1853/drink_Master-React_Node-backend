@@ -7,7 +7,7 @@ const filtersDrinksRouter = express.Router();
 
 filtersDrinksRouter.get("/categories", ctrl.getCategoriesController);
 
-filtersDrinksRouter.get("/glasses", ctrl.getContainersController);
+filtersDrinksRouter.get("/glasses", ctrl.getGlassesController);
 
 filtersDrinksRouter.get("/ingredients", ctrl.getIngredientsController);
 
