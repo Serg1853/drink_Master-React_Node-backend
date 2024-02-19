@@ -7,7 +7,10 @@
   },
   "servers": [
     {
-      "url": "https://localhost:3030"
+      "url": [
+        "https://localhost:3030",
+        "https://drink-master-project-zi2s.onrender.com"
+      ]
     }
   ],
   "tags": [
