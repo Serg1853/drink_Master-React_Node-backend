@@ -1,6 +1,6 @@
 const ctrlWrapper = require("../helpers/ctrlWrapper");
 const categories = require("../models/categories");
-const containers = require("../models/containers");
+const glasses = require("../models/Glasses");
 const Ingredient = require("../models/Ingredient");
 
 const getCategoriesController = async (req, res) => {
@@ -8,18 +8,18 @@ const getCategoriesController = async (req, res) => {
 	res.json(result);
 };
 
-const getContainersController = async (req, res) => {
-	const result = await containers.getContainers();
+const getGlassesController = async (req, res) => {
+	const result = await glasses.getGlasses();
 	res.json(result);
 };
 
 const getIngredientsController = async (req, res) => {
-    const result = await Ingredient.find();
+	const result = await Ingredient.find();
 	res.json(result);
 };
-
+//hllo
 module.exports = {
 	getCategoriesController: ctrlWrapper(getCategoriesController),
-	getContainersController: ctrlWrapper(getContainersController),
+	getGlassesController: ctrlWrapper(getGlassesController),
 	getIngredientsController: ctrlWrapper(getIngredientsController),
 };

@@ -1,46 +1,46 @@
 [
 	{
-		"id": "drsAJ4SHPYqZeG-83QTVW",
+		"_id": "drsAJ4SHPYqZeG-83QTVW",
 		"name": "Ordinary Drink"
 	},
 	{
-		"id": "05olLMgyVQdWRwgKfg5J6",
+		"_id": "05olLMgyVQdWRwgKfg5J6",
 		"name": "Cocktail"
 	},
 	{
-		"id": "1DEXoP8AuCGYc1YgoQ6hw",
+		"_id": "1DEXoP8AuCGYc1YgoQ6hw",
 		"name": "Shake"
 	},
 	{
-		"id": "C9sjBfCo4UJCWjzBnOtxl",
+		"_id": "C9sjBfCo4UJCWjzBnOtxl",
 		"name": "Other/Unknown"
 	},
 	{
-		"id": "e6ywwRe4jcqxXfCZOj_1e",
+		"_id": "e6ywwRe4jcqxXfCZOj_1e",
 		"name": "Cocoa"
 	},
 	{
-		"id": "e6ywwRe4jcqxXfCZOj_1e",
+		"_id": "e6ywwRe4jcqxXfCZOj_1e",
 		"name": "Shot"
 	},
 	{
-		"id": "X9xLINUWgQGYdapX_86hZ",
+		"_id": "X9xLINUWgQGYdapX_86hZ",
 		"name": "Coffee/Tea"
 	},
 	{
-		"id": "Ycoix-crFJUbwvh9wnsHs",
+		"_id": "Ycoix-crFJUbwvh9wnsHs",
 		"name": "Homemade Liqueur"
 	},
 	{
-		"id": "8lnnRfxxjYDsuOiq-HFn8",
+		"_id": "8lnnRfxxjYDsuOiq-HFn8",
 		"name": "Punch/Party Drink"
 	},
 	{
-		"id": "6vNFPFUs4HmkLZYYYDpBr",
+		"_id": "6vNFPFUs4HmkLZYYYDpBr",
 		"name": "Beer"
 	},
 	{
-		"id": "qnvQr6VBTT-NtO8X0dGPe",
+		"_id": "qnvQr6VBTT-NtO8X0dGPe",
 		"name": "Soft Drink"
 	}
 ]
