@@ -7,9 +7,9 @@ const getAll = async (req, res) => {
 };
 
 const getById = async (req, res, next) => {
-  const { id } = req.params;
+  const { _id } = req.params;
 
-  const result = await Contact.findOne({ _id: id });
+  const result = await Contact.findOne({ _id });
   if (result === null) {
     throw HttpError(404, "Not found");
   }
