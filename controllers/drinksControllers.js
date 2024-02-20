@@ -27,7 +27,7 @@ const findDrinkByCategoryAndIngredients = async (req, res) => {
 const getById = async (req, res, next) => {
 	const { id } = req.params;
 
-	const result = await Recipe.findById(id).populate(
+	const result = await Recipe.findById({ _id: id }).populate(
 		"ingredients.ingredientId",
 		"ingredientThumb thumb-medium thumb-small"
 	);
