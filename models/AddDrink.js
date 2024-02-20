@@ -51,7 +51,7 @@ const addDrinkSchema = new Schema(
 	{ versionKey: false, timestamps: true }
 );
 
-contactSchema.post("save", handleMongooseError);
+addDrinkSchema.post("save", handleMongooseError);
 const AddDrink = model("addDrink", addDrinkSchema);
 
 module.exports = AddDrink;
