@@ -9,7 +9,10 @@ const getAll = async (req, res) => {
 const getById = async (req, res, next) => {
 	const { id } = req.params;
 
-	const result = await Recipe.findOne({ _id: id });
+	const result = await Recipe.findById({ _id: id }).populate(
+		"ingredients.ingredientId",
+		"ingredientThumb thumb-medium thumb-small"
+	);
 	if (result === null) {
 		throw HttpError(404, "Not found");
 	}
