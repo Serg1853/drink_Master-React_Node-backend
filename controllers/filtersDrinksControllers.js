@@ -17,7 +17,7 @@ const getIngredientsController = async (req, res) => {
 	const result = await Ingredient.find();
 	res.json(result);
 };
-//hllo
+
 module.exports = {
 	getCategoriesController: ctrlWrapper(getCategoriesController),
 	getGlassesController: ctrlWrapper(getGlassesController),
