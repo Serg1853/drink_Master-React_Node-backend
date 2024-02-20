@@ -1,15 +1,15 @@
 const { ctrlWrapper, HttpError } = require("../helpers");
-const Ingredient = require("../models/Ingredient");
+const Recipe = require("../models/Recipe");
 
 const getAll = async (req, res) => {
-	const result = await Ingredient.find();
+	const result = await Recipe.find();
 	res.json(result);
 };
 
 const getById = async (req, res, next) => {
 	const { id } = req.params;
 
-	const result = await Ingredient.findOne({ _id: id });
+	const result = await Recipe.findOne({ _id: id });
 	if (result === null) {
 		throw HttpError(404, "Not found");
 	}
@@ -18,7 +18,7 @@ const getById = async (req, res, next) => {
 
 const addOwnDrink = async (req, res) => {
 	const { _id: owner } = req.user;
-	const result = await Contact.create({ ...req.body, owner });
+	const result = await Recipe.create({ ...req.body, owner });
 	res.status(201).json(result);
 };
 
