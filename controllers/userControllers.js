@@ -78,7 +78,7 @@ const getCurrent = (req, res) => {
   res.status(200).json({ email, name, avatarURL });
 };
 
-const logoutUser = async (req, res) => {
+const signoutUser = async (req, res) => {
   const { _id } = req.user;
 
   await User.findByIdAndUpdate(_id, { token: "" });
@@ -125,7 +125,7 @@ module.exports = {
   signupUser: ctrlWrapper(signupUser),
   signinUser: ctrlWrapper(signinUser),
   updateAvatar: ctrlWrapper(updateAvatar),
-  updateSubscription:ctrlWrapper(updateSubscription),
-  logoutUser,
+  updateSubscription: ctrlWrapper(updateSubscription),
+  signoutUser,
   getCurrent,
 };
