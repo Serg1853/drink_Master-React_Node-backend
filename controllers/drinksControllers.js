@@ -6,10 +6,28 @@ const getAll = async (req, res) => {
 	res.json(result);
 };
 
+const findDrinkByCategoryAndIngredients = async (req, res) => {
+	const { category, ingredient, drinkStartsWith } = req.body;
+
+	let query = {};
+	if (category) {
+		query.category = category;
+	}
+	if (ingredient) {
+		query["ingredients.title"] = ingredient;
+	}
+	if (drinkStartsWith) {
+		query.drink = { $regex: new RegExp("^" + drinkStartsWith, "i") };
+	}
+
+	const result = await Recipe.find(query);
+	res.json(result);
+};
+
 const getById = async (req, res, next) => {
 	const { id } = req.params;
 
-	const result = await Recipe.findById({ _id: id }).populate(
+	const result = await Recipe.findById(id).populate(
 		"ingredients.ingredientId",
 		"ingredientThumb thumb-medium thumb-small"
 	);
@@ -42,9 +60,11 @@ const removeOwnDrink = async (req, res) => {
 };
 
 module.exports = {
-  getAll: ctrlWrapper(getAll),
-  getById: ctrlWrapper(getById),
-  addOwnDrink: ctrlWrapper(addOwnDrink),
+	getAll: ctrlWrapper(getAll),
+	getById: ctrlWrapper(getById),
+	addOwnDrink: ctrlWrapper(addOwnDrink),
+	findDrinkByCategoryAndIngredients: ctrlWrapper(
+		findDrinkByCategoryAndIngredients),
   getOwnDrink: ctrlWrapper(getOwnDrink),
   removeOwnDrink: ctrlWrapper(removeOwnDrink),
 };
