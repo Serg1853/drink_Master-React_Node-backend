@@ -1,15 +1,15 @@
 const express = require("express");
-const validateBody = require("../middlewares/validateBody");
+const { validateBody, authenticate } = require("../middlewares/");
 const {
-  signupSchema,
-  signinSchema,
-  subscriptionListSchema,
+	signupSchema,
+	signinSchema,
+	subscriptionListSchema,
 } = require("../schemas/userSchemas");
-const authenticate = require("../middlewares/authenticate");
+
 const {
-  signupUser,
-  signinUser,
-  logoutUser,
+	signupUser,
+	signinUser,
+	logoutUser,
 } = require("../controllers/userControllers");
 
 const authRouter = express.Router();

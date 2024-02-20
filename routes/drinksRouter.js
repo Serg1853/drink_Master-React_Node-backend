@@ -1,8 +1,13 @@
 const express = require("express");
 const drinksRouter = express.Router();
+const { validateBody, isEmptyBody } = require("../middlewares");
+const addDrinkSchema = require("../schemas/addDrinkSchema");
 
-// const { authenticate } = require("../middlewares/authenticate");
-const { getAll, getById } = require("../controllers/drinksControllers");
+const {
+	getAll,
+	getById,
+	addOwnDrink,
+} = require("../controllers/drinksControllers");
 
 drinksRouter.get("/mainpage", getAll);
 
@@ -12,7 +17,12 @@ drinksRouter.get("/popular");
 
 drinksRouter.get("/search");
 
-drinksRouter.post("/own/add");
+drinksRouter.post(
+	"/own/add",
+	isEmptyBody,
+	validateBody(addDrinkSchema),
+	addOwnDrink
+);
 
 drinksRouter.delete("/own/remove");
 
