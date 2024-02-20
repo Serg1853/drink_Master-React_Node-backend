@@ -1,8 +1,9 @@
 const { Schema, model } = require("mongoose");
+const handleMongooseError = require("../helpers/handleMongooseError");
 
 // const alcoholList = ["Yes", "No"];
 
-const addDrinkSchema = new Schema(
+const drinkSchema = new Schema(
 	{
 		file: String,
 		drink: {
@@ -27,18 +28,26 @@ const addDrinkSchema = new Schema(
 			// enum: alcoholList,
 			// default: "Yes",
 		},
-		ingredients: [
-			{
-				title: {
-					type: String,
-					required: true,
+		ingredients: {
+			type: [
+				{
+					title: {
+						type: String,
+						required: true,
+					},
+					measure: {
+						type: String,
+						required: true,
+					},
+					ingredientId: {
+						type: Schema.Types.ObjectId,
+						required: true,
+						ref: "ingredient",
+					},
 				},
-				measure: {
-					type: String,
-					required: true,
-				},
-			},
-		],
+			],
+			required: true,
+		},
 		instructions: {
 			type: String,
 		},
@@ -51,7 +60,7 @@ const addDrinkSchema = new Schema(
 	{ versionKey: false, timestamps: true }
 );
 
-addDrinkSchema.post("save", handleMongooseError);
-const AddDrink = model("addDrink", addDrinkSchema);
+drinkSchema.post("save", handleMongooseError);
+const Recipe = model("recipe", drinkSchema);
 
-module.exports = AddDrink;
+module.exports = Recipe;
