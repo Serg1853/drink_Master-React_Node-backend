@@ -30,12 +30,19 @@ const addDrinkSchema = Joi.object({
 	ingredients: Joi.array()
 		.items(
 			Joi.object({
+				_id: Joi.string().required(),
 				title: Joi.string().required().messages({
 					"any.required": "missing required ingredient name field",
 				}),
 				measure: Joi.string()
 					.required()
 					.messages({ "any.required": "missing required measure field" }),
+				ingredientId: Joi.object({
+					_id: Joi.string().required(),
+					ingredientThumb: Joi.string().uri().optional(),
+					"thumb-medium": Joi.string().uri().optional(),
+					"thumb-small": Joi.string().uri().optional(),
+				}).required(),
 			})
 		)
 		.required(),
