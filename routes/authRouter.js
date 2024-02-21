@@ -7,9 +7,9 @@ const {
 } = require("../schemas/userSchemas");
 
 const {
-	signupUser,
-	signinUser,
-	logoutUser,
+  signupUser,
+  signinUser,
+  signoutUser,
 } = require("../controllers/userControllers");
 
 const authRouter = express.Router();
@@ -18,6 +18,6 @@ authRouter.post("/signup", validateBody(signupSchema), signupUser);
 
 authRouter.post("/signin", validateBody(signinSchema), signinUser);
 
-authRouter.post("/logout", authenticate, logoutUser);
+authRouter.post("/signout", authenticate, signoutUser);
 
 module.exports = authRouter;
