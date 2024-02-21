@@ -85,11 +85,11 @@ const signoutUser = async (req, res) => {
   res.status(204).json();
 };
 
-const updateAvatar = async (req, res) => {
+const updateUser = async (req, res) => {
   if (!req.file) {
     throw HttpError(400, "Avatar must be provided");
   }
-  const { _id } = req.user;
+  const { _id, name } = req.user;
   const { path: tempUpload, originalname } = req.file;
   await Jimp.read(tempUpload)
     .then((avatar) => {
@@ -105,10 +105,10 @@ const updateAvatar = async (req, res) => {
   const resultUpload = path.resolve("public", "avatars", filename);
   await fs.rename(tempUpload, resultUpload);
   const avatarURL = path.join("avatars", filename);
-  await User.findByIdAndUpdate(_id, { avatarURL });
-  res.json({
-    avatarURL,
-  });
+  const newName = req.body;
+  await User.findByIdAndUpdate(_id, { name: newName }, { avatarURL });
+
+  res.json({ name, avatarURL });
 };
 
 const updateSubscription = async (req, res) => {
@@ -124,7 +124,7 @@ const updateSubscription = async (req, res) => {
 module.exports = {
   signupUser: ctrlWrapper(signupUser),
   signinUser: ctrlWrapper(signinUser),
-  updateAvatar: ctrlWrapper(updateAvatar),
+  updateUser: ctrlWrapper(updateUser),
   updateSubscription: ctrlWrapper(updateSubscription),
   signoutUser,
   getCurrent,
