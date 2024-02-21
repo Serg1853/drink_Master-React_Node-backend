@@ -61,12 +61,25 @@ const removeOwnDrink = async (req, res) => {
 
 };
 
+const addFavorite = async (req, res) => {
+  const { id } = req.params;
+  const { _id: owner } = req.user;
+  const result = await Recipe.findByIdAndUpdate(
+    id,
+    { $push: { users: owner } },
+    { new: true }
+  );
+  res.json(result);
+};
+
 module.exports = {
-	getAll: ctrlWrapper(getAll),
-	getById: ctrlWrapper(getById),
-	addOwnDrink: ctrlWrapper(addOwnDrink),
-	findDrinkByCategoryAndIngredients: ctrlWrapper(
-		findDrinkByCategoryAndIngredients),
+  getAll: ctrlWrapper(getAll),
+  getById: ctrlWrapper(getById),
+  addOwnDrink: ctrlWrapper(addOwnDrink),
+  findDrinkByCategoryAndIngredients: ctrlWrapper(
+    findDrinkByCategoryAndIngredients
+  ),
   getOwnDrink: ctrlWrapper(getOwnDrink),
   removeOwnDrink: ctrlWrapper(removeOwnDrink),
+  addFavorite: ctrlWrapper(addFavorite),
 };
