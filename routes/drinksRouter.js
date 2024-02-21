@@ -5,8 +5,12 @@ const addDrinkSchema = require("../schemas/addDrinkSchema");
 
 const {
 	getAll,
+
+	findDrinkByCategoryAndIngredients,
 	getById,
 	addOwnDrink,
+	getOwnDrink,
+	removeOwnDrink,
 } = require("../controllers/drinksControllers");
 
 drinksRouter.get("/mainpage", getAll);
@@ -15,11 +19,12 @@ drinksRouter.get("/:id", getById);
 
 drinksRouter.get("/popular");
 
-drinksRouter.get("/search");
+drinksRouter.get("/search", findDrinkByCategoryAndIngredients);
 
 drinksRouter.post(
 	"/own/add",
 	isEmptyBody,
+	authenticate,
 	validateBody(addDrinkSchema),
 	addOwnDrink
 );

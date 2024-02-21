@@ -56,7 +56,10 @@ const drinkSchema = new Schema(
 			ref: "user",
 			required: true,
 		},
-		popular: Number,
+		favorite: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	{ versionKey: false, timestamps: true }
 );
