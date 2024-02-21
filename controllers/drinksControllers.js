@@ -2,7 +2,12 @@ const { ctrlWrapper, HttpError } = require("../helpers");
 const Recipe = require("../models/Recipe");
 
 const getAll = async (req, res) => {
-	const result = await Recipe.find();
+	const { page = 1, limit = 9 } = req.query;
+	const skip = (page - 1) * limit;
+	const result = await Recipe.find({
+		skip,
+		limit,
+	});
 	res.json(result);
 };
 
@@ -44,7 +49,6 @@ const addOwnDrink = async (req, res) => {
 };
 
 const getOwnDrink = async (req, res) => {
-
 	const { _id: owner } = req.user;
 	const result = await Recipe.find({ owner });
 	res.json(result);
@@ -58,7 +62,6 @@ const removeOwnDrink = async (req, res) => {
 		throw HttpError(404, "Not found");
 	}
 	res.status(200).json({ message: "drink deleted" });
-
 };
 
 const addFavorite = async (req, res) => {
