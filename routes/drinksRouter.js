@@ -33,7 +33,7 @@ drinksRouter.delete("/own/remove", authenticate, removeOwnDrink);
 
 drinksRouter.get("/own", authenticate, getOwnDrink);
 
-drinksRouter.post("/favorite/add", addFavorite);
+drinksRouter.post("/favorite/add/:id", authenticate, addFavorite);
 
 drinksRouter.delete("/favorite/remove");
 

@@ -1,5 +1,6 @@
 const { ctrlWrapper, HttpError } = require("../helpers");
 const Recipe = require("../models/Recipe");
+const { User } = require("../models/User");
 
 const getAll = async (req, res) => {
 	const { page = 1, limit = 9 } = req.query;
@@ -12,40 +13,40 @@ const getAll = async (req, res) => {
 };
 
 const findDrinkByCategoryAndIngredients = async (req, res) => {
-	const { category, ingredient, drinkStartsWith } = req.body;
+  const { category, ingredient, drinkStartsWith } = req.body;
 
-	let query = {};
-	if (category) {
-		query.category = category;
-	}
-	if (ingredient) {
-		query["ingredients.title"] = ingredient;
-	}
-	if (drinkStartsWith) {
-		query.drink = { $regex: new RegExp("^" + drinkStartsWith, "i") };
-	}
+  let query = {};
+  if (category) {
+    query.category = category;
+  }
+  if (ingredient) {
+    query["ingredients.title"] = ingredient;
+  }
+  if (drinkStartsWith) {
+    query.drink = { $regex: new RegExp("^" + drinkStartsWith, "i") };
+  }
 
-	const result = await Recipe.find(query);
-	res.json(result);
+  const result = await Recipe.find(query);
+  res.json(result);
 };
 
 const getById = async (req, res, next) => {
-	const { id } = req.params;
+  const { id } = req.params;
 
-	const result = await Recipe.findById({ _id: id }).populate(
-		"ingredients.ingredientId",
-		"ingredientThumb thumb-medium thumb-small"
-	);
-	if (result === null) {
-		throw HttpError(404, "Not found");
-	}
-	res.json(result);
+  const result = await Recipe.findById({ _id: id }).populate(
+    "ingredients.ingredientId",
+    "ingredientThumb thumb-medium thumb-small"
+  );
+  if (result === null) {
+    throw HttpError(404, "Not found");
+  }
+  res.json(result);
 };
 
 const addOwnDrink = async (req, res) => {
-	const { _id: owner } = req.user;
-	const result = await Recipe.create({ ...req.body, owner });
-	res.status(201).json(result);
+  const { _id: owner } = req.user;
+  const result = await Recipe.create({ ...req.body, owner });
+  res.status(201).json(result);
 };
 
 const getOwnDrink = async (req, res) => {
@@ -72,6 +73,17 @@ const addFavorite = async (req, res) => {
     { $push: { users: owner } },
     { new: true }
   );
+  res.json(result);
+};
+
+const getFavorite = async (req, res) => {};
+
+const deleteFavorite = async (req, res) => {
+  const { id } = req.params;
+  const { _id: owner } = req.user;
+  const result = await Recipe.findByIdAndUpdate(id, {
+    $pull: { users: owner },
+  });
   res.json(result);
 };
 
