@@ -4,12 +4,13 @@ const { validateBody, isEmptyBody, authenticate } = require("../middlewares");
 const addDrinkSchema = require("../schemas/addDrinkSchema");
 
 const {
-	getAll,
-	findDrinkByCategoryAndIngredients,
-	getById,
-	addOwnDrink,
-	getOwnDrink,
-	removeOwnDrink,
+  getAll,
+  findDrinkByCategoryAndIngredients,
+  getById,
+  addOwnDrink,
+  getOwnDrink,
+  removeOwnDrink,
+  addFavorite,
 } = require("../controllers/drinksControllers");
 
 drinksRouter.get("/mainpage", getAll);
@@ -32,7 +33,7 @@ drinksRouter.delete("/own/remove", authenticate, removeOwnDrink);
 
 drinksRouter.get("/own", authenticate, getOwnDrink);
 
-drinksRouter.post("/favorite/add");
+drinksRouter.post("/favorite/add", addFavorite);
 
 drinksRouter.delete("/favorite/remove");
 
