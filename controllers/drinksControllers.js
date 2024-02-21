@@ -3,8 +3,13 @@ const Recipe = require("../models/Recipe");
 const { User } = require("../models/User");
 
 const getAll = async (req, res) => {
-  const result = await Recipe.find();
-  res.json(result);
+	const { page = 1, limit = 9 } = req.query;
+	const skip = (page - 1) * limit;
+	const result = await Recipe.find({
+		skip,
+		limit,
+	});
+	res.json(result);
 };
 
 const findDrinkByCategoryAndIngredients = async (req, res) => {
@@ -45,19 +50,19 @@ const addOwnDrink = async (req, res) => {
 };
 
 const getOwnDrink = async (req, res) => {
-  const { _id: owner } = req.user;
-  const result = await Recipe.find({ owner });
-  res.json(result);
+	const { _id: owner } = req.user;
+	const result = await Recipe.find({ owner });
+	res.json(result);
 };
 
 const removeOwnDrink = async (req, res) => {
-  const { id } = req.params;
-  const { _id: owner } = req.user;
-  const result = await Recipe.findOneAndDelete({ _id: id, owner });
-  if (!result) {
-    throw HttpError(404, "Not found");
-  }
-  res.status(200).json({ message: "drink deleted" });
+	const { id } = req.params;
+	const { _id: owner } = req.user;
+	const result = await Recipe.findOneAndDelete({ _id: id, owner });
+	if (!result) {
+		throw HttpError(404, "Not found");
+	}
+	res.status(200).json({ message: "drink deleted" });
 };
 
 const addFavorite = async (req, res) => {
