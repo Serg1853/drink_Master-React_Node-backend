@@ -4,11 +4,12 @@ const { validateBody, isEmptyBody, authenticate } = require("../middlewares");
 const addDrinkSchema = require("../schemas/addDrinkSchema");
 
 const {
-  getAll,
-  getById,
-  addOwnDrink,
-  getOwnDrink,
-  removeOwnDrink,
+	getAll,
+	findDrinkByCategoryAndIngredients,
+	getById,
+	addOwnDrink,
+	getOwnDrink,
+	removeOwnDrink,
 } = require("../controllers/drinksControllers");
 
 drinksRouter.get("/mainpage", getAll);
@@ -17,7 +18,7 @@ drinksRouter.get("/:id", authenticate, getById);
 
 drinksRouter.get("/popular");
 
-drinksRouter.get("/search");
+drinksRouter.get("/search", findDrinkByCategoryAndIngredients);
 
 drinksRouter.post(
   "/own/add",

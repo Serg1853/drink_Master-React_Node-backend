@@ -44,19 +44,21 @@ const addOwnDrink = async (req, res) => {
 };
 
 const getOwnDrink = async (req, res) => {
-  const { _id: owner } = req.user;
-  const result = await Recipe.find({ owner });
-  res.json(result);
+
+	const { _id: owner } = req.user;
+	const result = await Recipe.find({ owner });
+	res.json(result);
 };
 
 const removeOwnDrink = async (req, res) => {
-  const { id } = req.params;
-  const { _id: owner } = req.user;
-  const result = await Recipe.findOneAndDelete({ _id: id, owner });
-  if (!result) {
-    throw HttpError(404, "Not found");
-  }
-  res.status(200).json({ message: "drink deleted" });
+	const { id } = req.params;
+	const { _id: owner } = req.user;
+	const result = await Recipe.findOneAndDelete({ _id: id, owner });
+	if (!result) {
+		throw HttpError(404, "Not found");
+	}
+	res.status(200).json({ message: "drink deleted" });
+
 };
 
 module.exports = {
