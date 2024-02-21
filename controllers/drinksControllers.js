@@ -63,11 +63,22 @@ const removeOwnDrink = async (req, res) => {
 const addFavorite = async (req, res) => {
   const { id } = req.params;
   const { _id: owner } = req.user;
-  const result = await User.findByIdAndUpdate(
-    owner,
-    { $push: { favorite: id } },
+  const result = await Recipe.findByIdAndUpdate(
+    id,
+    { $push: { users: owner } },
     { new: true }
   );
+  res.json(result);
+};
+
+const getFavorite = async (req, res) => {};
+
+const deleteFavorite = async (req, res) => {
+  const { id } = req.params;
+  const { _id: owner } = req.user;
+  const result = await Recipe.findByIdAndUpdate(id, {
+    $pull: { users: owner },
+  });
   res.json(result);
 };
 

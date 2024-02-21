@@ -94,7 +94,7 @@ const updateUser = async (req, res) => {
   await Jimp.read(tempUpload)
     .then((avatar) => {
       return avatar
-        .resize(250, 250) // resize
+        .resize(50, 50) // resize
         .quality(60) // set JPEG quality
         .write(tempUpload); // save
     })

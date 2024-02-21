@@ -41,9 +41,6 @@ const userSchema = new Schema(
       type: Number,
       require: true,
     },
-    favorite: {
-      type: [],
-    },
   },
   { versionKey: false }
 );
