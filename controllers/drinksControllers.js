@@ -12,41 +12,41 @@ const getAll = async (req, res) => {
 	res.json(result);
 };
 
-const findDrinkByCategoryAndIngredients = async (req, res) => {
-  const { category, ingredient, drinkStartsWith } = req.body;
+const findDrinkByFiltrs = async (req, res) => {
+	const { category, ingredient, drinkStartsWith } = req.body;
 
-  let query = {};
-  if (category) {
-    query.category = category;
-  }
-  if (ingredient) {
-    query["ingredients.title"] = ingredient;
-  }
-  if (drinkStartsWith) {
-    query.drink = { $regex: new RegExp("^" + drinkStartsWith, "i") };
-  }
+	let query = {};
+	if (category) {
+		query.category = category;
+	}
+	if (ingredient) {
+		query["ingredients.title"] = ingredient;
+	}
+	if (drinkStartsWith) {
+		query.drink = { $regex: new RegExp("^" + drinkStartsWith, "i") };
+	}
 
-  const result = await Recipe.find(query);
-  res.json(result);
+	const result = await Recipe.find(query);
+	res.json(result);
 };
 
 const getById = async (req, res, next) => {
-  const { id } = req.params;
+	const { id } = req.params;
 
-  const result = await Recipe.findById({ _id: id }).populate(
-    "ingredients.ingredientId",
-    "ingredientThumb thumb-medium thumb-small"
-  );
-  if (result === null) {
-    throw HttpError(404, "Not found");
-  }
-  res.json(result);
+	const result = await Recipe.findById({ _id: id }).populate(
+		"ingredients.ingredientId",
+		"ingredientThumb thumb-medium thumb-small"
+	);
+	if (result === null) {
+		throw HttpError(404, "Not found");
+	}
+	res.json(result);
 };
 
 const addOwnDrink = async (req, res) => {
-  const { _id: owner } = req.user;
-  const result = await Recipe.create({ ...req.body, owner });
-  res.status(201).json(result);
+	const { _id: owner } = req.user;
+	const result = await Recipe.create({ ...req.body, owner });
+	res.status(201).json(result);
 };
 
 const getOwnDrink = async (req, res) => {
@@ -65,36 +65,51 @@ const removeOwnDrink = async (req, res) => {
 	res.status(200).json({ message: "drink deleted" });
 };
 
-const addFavorite = async (req, res) => {
-  const { id } = req.params;
-  const { _id: owner } = req.user;
-  const result = await Recipe.findByIdAndUpdate(
-    id,
-    { $push: { users: owner } },
-    { new: true }
-  );
-  res.json(result);
+const getPopularDrinks = async (req, res) => {
+	const popularDrinks = await Recipe.find({
+		users: { $exists: true, $ne: [] },
+	})
+		.sort({ users: -1 })
+		.exec();
+
+	res.json(popularDrinks);
 };
 
-const getFavorite = async (req, res) => {};
+const addFavorite = async (req, res) => {
+	const { id } = req.params;
+	const { _id: owner } = req.user;
+	const result = await Recipe.findByIdAndUpdate(
+		id,
+		{ $push: { users: owner } },
+		{ new: true }
+	);
+	res.json(result);
+};
+
+const getFavorite = async (req, res) => {
+	const { users } = req.body;
+	const result = await Recipe.find();
+	res.json(result);
+};
 
 const deleteFavorite = async (req, res) => {
-  const { id } = req.params;
-  const { _id: owner } = req.user;
-  const result = await Recipe.findByIdAndUpdate(id, {
-    $pull: { users: owner },
-  });
-  res.json(result);
+	const { id } = req.params;
+	const { _id: owner } = req.user;
+	const result = await Recipe.findByIdAndUpdate(id, {
+		$pull: { users: owner },
+	});
+	res.json(result);
 };
 
 module.exports = {
-  getAll: ctrlWrapper(getAll),
-  getById: ctrlWrapper(getById),
-  addOwnDrink: ctrlWrapper(addOwnDrink),
-  findDrinkByCategoryAndIngredients: ctrlWrapper(
-    findDrinkByCategoryAndIngredients
-  ),
-  getOwnDrink: ctrlWrapper(getOwnDrink),
-  removeOwnDrink: ctrlWrapper(removeOwnDrink),
-  addFavorite: ctrlWrapper(addFavorite),
+	getAll: ctrlWrapper(getAll),
+	getById: ctrlWrapper(getById),
+	addOwnDrink: ctrlWrapper(addOwnDrink),
+	findDrinkByFiltrs: ctrlWrapper(findDrinkByFiltrs),
+	getOwnDrink: ctrlWrapper(getOwnDrink),
+	removeOwnDrink: ctrlWrapper(removeOwnDrink),
+	getPopularDrinks: ctrlWrapper(getPopularDrinks),
+	addFavorite: ctrlWrapper(addFavorite),
+	getFavorite: ctrlWrapper(getFavorite),
+	deleteFavorite: ctrlWrapper(deleteFavorite),
 };
