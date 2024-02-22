@@ -3,7 +3,7 @@ const Recipe = require("../models/Recipe");
 // const { User } = require("../models/User");
 
 const getAll = async (req, res) => {
-	const result = await Recipe.find();
+	const result = await Recipe.findOne();
 	res.json(result);
 };
 
