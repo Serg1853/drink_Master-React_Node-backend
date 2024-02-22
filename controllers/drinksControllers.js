@@ -1,8 +1,9 @@
 const { ctrlWrapper, HttpError } = require("../helpers");
 const Recipe = require("../models/Recipe");
+const Ingredient = require("../models/Ingredient");
 
 const getAll = async (req, res) => {
-	const limit = 12;
+	const limit = 20;
 	const result = await Recipe.find().limit(limit);
 	res.json(result);
 };
@@ -61,15 +62,30 @@ const removeOwnDrink = async (req, res) => {
 };
 
 const getPopularDrinks = async (req, res) => {
-	const popularDrinks = await Recipe.find({
-		users: { $exists: true, $ne: [] },
-	})
-		.sort({ users: -1 })
-		.exec();
-
+	const popularDrinks = await Recipe.aggregate([
+		{
+			$match: {
+				users: { $exists: true, $ne: [] },
+			},
+		},
+		{
+			$addFields: {
+				usersCount: { $size: "$users" },
+			},
+		},
+		{
+			$sort: {
+				usersCount: -1,
+			},
+		},
+	]);
 	res.json(popularDrinks);
 };
-
+const getFavorite = async (req, res) => {
+	const { _id: owner } = req.user;
+	const favoriteDrinks = await Recipe.find({ users: owner }).populate("owner");
+	res.json(favoriteDrinks);
+};
 const addFavorite = async (req, res) => {
 	const { id } = req.params;
 	const { _id: owner } = req.user;
@@ -80,13 +96,6 @@ const addFavorite = async (req, res) => {
 	);
 	res.json(result);
 };
-
-const getFavorite = async (req, res) => {
-	const { users } = req.body;
-	const result = await Recipe.find({ users });
-	res.json(result);
-};
-
 const deleteFavorite = async (req, res) => {
 	const { id } = req.params;
 	const { _id: owner } = req.user;
