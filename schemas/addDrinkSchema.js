@@ -36,9 +36,9 @@ const addDrinkSchema = Joi.object({
   //       })
   //     )
   //     .required(),
-  //   instructions: Joi.string()
-  //     .required()
-  //     .messages({ "any.required": "missing required instruction field" }),
+    instructions: Joi.string()
+      .required()
+      .messages({ "any.required": "missing required instruction field" }),
 });
 
 module.exports = addDrinkSchema;
