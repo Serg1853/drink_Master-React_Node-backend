@@ -1,10 +1,8 @@
 const { ctrlWrapper, HttpError } = require("../helpers");
 const Recipe = require("../models/Recipe");
-const { User } = require("../models/User");
+// const { User } = require("../models/User");
 
 const getAll = async (req, res) => {
-	const { limit = 9 } = req.query;
-
 	const result = await Recipe.find().limit(limit);
 	res.json(result);
 };
