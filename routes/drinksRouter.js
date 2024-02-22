@@ -4,31 +4,32 @@ const { validateBody, isEmptyBody, authenticate } = require("../middlewares");
 const addDrinkSchema = require("../schemas/addDrinkSchema");
 
 const {
-  getAll,
-  findDrinkByCategoryAndIngredients,
-  getById,
-  addOwnDrink,
-  getOwnDrink,
-  removeOwnDrink,
-  addFavorite,
-  deleteFavorite,
-  getFavorite,
+	getAll,
+	findDrinkByFiltrs,
+	getById,
+	addOwnDrink,
+	getOwnDrink,
+	removeOwnDrink,
+	getPopularDrinks,
+	addFavorite,
+	getFavorite,
+	deleteFavorite,
 } = require("../controllers/drinksControllers");
 
 drinksRouter.get("/mainpage", getAll);
 
 drinksRouter.get("/:id", authenticate, getById);
 
-drinksRouter.get("/popular");
+drinksRouter.get("/popular", authenticate, getPopularDrinks);
 
-drinksRouter.get("/search", findDrinkByCategoryAndIngredients);
+drinksRouter.get("/search", findDrinkByFiltrs);
 
 drinksRouter.post(
-  "/own/add",
-  isEmptyBody,
-  authenticate,
-  validateBody(addDrinkSchema),
-  addOwnDrink
+	"/own/add",
+	isEmptyBody,
+	authenticate,
+	validateBody(addDrinkSchema),
+	addOwnDrink
 );
 
 drinksRouter.delete("/own/remove", authenticate, removeOwnDrink);
