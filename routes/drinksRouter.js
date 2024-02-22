@@ -11,6 +11,8 @@ const {
   getOwnDrink,
   removeOwnDrink,
   addFavorite,
+  deleteFavorite,
+  getFavorite,
 } = require("../controllers/drinksControllers");
 
 drinksRouter.get("/mainpage", getAll);
@@ -35,8 +37,8 @@ drinksRouter.get("/own", authenticate, getOwnDrink);
 
 drinksRouter.post("/favorite/add/:id", authenticate, addFavorite);
 
-drinksRouter.delete("/favorite/remove");
+drinksRouter.delete("/favorite/remove", authenticate, deleteFavorite);
 
-drinksRouter.get("/favorite");
+drinksRouter.get("/favorite", authenticate, getFavorite);
 
 module.exports = drinksRouter;

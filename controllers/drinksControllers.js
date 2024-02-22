@@ -76,7 +76,11 @@ const addFavorite = async (req, res) => {
   res.json(result);
 };
 
-const getFavorite = async (req, res) => {};
+const getFavorite = async (req, res) => {
+  //   const { id } = req.params;
+  const result = await Recipe.findOne();
+  console.log("result", result);
+};
 
 const deleteFavorite = async (req, res) => {
   const { id } = req.params;
@@ -97,4 +101,6 @@ module.exports = {
   getOwnDrink: ctrlWrapper(getOwnDrink),
   removeOwnDrink: ctrlWrapper(removeOwnDrink),
   addFavorite: ctrlWrapper(addFavorite),
+  deleteFavorite: ctrlWrapper(deleteFavorite),
+  getFavorite: ctrlWrapper(getFavorite),
 };
