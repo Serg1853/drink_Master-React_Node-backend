@@ -5,6 +5,8 @@ const Recipe = require("../models/Recipe");
 const getAll = async (req, res) => {
   const result = await Recipe.findOne();
   res.json(result);
+	const result = await Recipe.findOne();
+	res.json(result);
 };
 
 const findDrinkByFiltrs = async (req, res) => {
