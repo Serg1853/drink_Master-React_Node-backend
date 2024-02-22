@@ -38,7 +38,7 @@ drinksRouter.get("/own", authenticate, getOwnDrink);
 
 drinksRouter.post("/favorite/add/:id", authenticate, addFavorite);
 
-drinksRouter.delete("/favorite/remove", authenticate, deleteFavorite);
+drinksRouter.delete("/favorite/remove/:id", authenticate, deleteFavorite);
 
 drinksRouter.get("/favorite", authenticate, getFavorite);
 
