@@ -12,8 +12,6 @@ require("dotenv").config();
 
 const { SECRET_KEY } = process.env;
 
-// const avatarDir = path.join(__dirname, "../", "public", "avatars");
-
 const signupUser = async (req, res, next) => {
 	const { name, email, password } = req.body;
 	const user = await User.findOne({ email });
@@ -36,7 +34,6 @@ const signupUser = async (req, res, next) => {
 	const token = jwt.sign(payload, SECRET_KEY);
 	await User.findByIdAndUpdate(newUser._id, { token });
 	res.status(201).json({
-		// _id,
 		token,
 		user: {
 			name,
@@ -85,28 +82,9 @@ const signoutUser = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-	// if (!req.file) {
-	//   throw HttpError(400, "Avatar must be provided");
-	// }
 	const { _id, name } = req.user;
-	// const { path: tempUpload, originalname } = req.file;
-	// await Jimp.read(tempUpload)
-	//   .then((avatar) => {
-	//     return avatar
-	//       .resize(50, 50) // resize
-	//       .quality(60) // set JPEG quality
-	//       .write(tempUpload); // save
-	//   })
-	//   .catch((err) => {
-	//     throw err;
-	//   });
-	// const filename = `${_id}_${originalname}`;
-	// const resultUpload = path.resolve("public", "avatars", filename);
-	// await fs.rename(tempUpload, resultUpload);
-	// const avatarURL = path.join("avatars", filename);
 	const newName = req.body.name;
 	await User.findByIdAndUpdate(_id, { name: newName });
-
 	res.json({ name });
 };
 
@@ -152,6 +130,6 @@ module.exports = {
 	updateUser: ctrlWrapper(updateUser),
 	updateSubscription: ctrlWrapper(updateSubscription),
 	updateUserAvatar: ctrlWrapper(updateUserAvatar),
-	signoutUser,
-	getCurrent,
+	signoutUser: ctrlWrapper(signoutUser),
+	getCurrent: ctrlWrapper(getCurrent),
 };
