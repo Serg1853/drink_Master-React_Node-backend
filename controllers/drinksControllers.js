@@ -1,6 +1,5 @@
 const { ctrlWrapper, HttpError } = require("../helpers");
 const Recipe = require("../models/Recipe");
-// const { User } = require("../models/User");
 
 const getAll = async (req, res) => {
 	const limit = 9;
@@ -9,7 +8,7 @@ const getAll = async (req, res) => {
 };
 
 const findDrinkByFiltrs = async (req, res) => {
-	const { category, ingredient, drink } = req.body;
+	const { category, ingredient, keyWord } = req.body;
 	const { page = 1, limit = 9 } = req.query;
 
 	const query = {};
@@ -17,11 +16,10 @@ const findDrinkByFiltrs = async (req, res) => {
 
 	ingredient && (query.ingredients = { $elemMatch: { id: ingredient } });
 
-	drink && (query.drink = { $regex: drink, $options: "i" });
+	keyWord && (query.drink = { $regex: keyWord, $options: "i" });
+	keyWord && (query.description = { $regex: keyWord, $options: "i" });
 
-	const result = await Recipe.find({
-		name: { $regex: keyWord, $options: "i" },
-	})
+	const result = await Recipe.find(query)
 		.limit(limit)
 		.skip((page - 1) * limit);
 	res.json(result);
