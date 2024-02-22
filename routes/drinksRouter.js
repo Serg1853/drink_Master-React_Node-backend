@@ -18,9 +18,9 @@ const {
 
 drinksRouter.get("/mainpage", getAll);
 
-drinksRouter.get("/:id", authenticate, getById);
+drinksRouter.get("/:id", getById);
 
-drinksRouter.get("/popular", authenticate, getPopularDrinks);
+drinksRouter.get("/popular", getPopularDrinks);
 
 drinksRouter.get("/search", findDrinkByFiltrs);
 
