@@ -1,5 +1,5 @@
 const { ctrlWrapper, HttpError } = require("../helpers");
-const { Recipe } = require("../models/Recipe");
+const Recipe = require("../models/Recipe");
 // const { User } = require("../models/User");
 
 const getAll = async (req, res) => {

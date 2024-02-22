@@ -55,9 +55,9 @@ const drinkSchema = new Schema(
 			type: Schema.Types.ObjectId,
 			ref: "user",
 		},
-		// users: {
-		// 	type: [],
-		// },
+		users: {
+			type: [],
+		},
 	},
 	{ versionKey: false, timestamps: true }
 );
