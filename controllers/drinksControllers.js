@@ -4,7 +4,7 @@ const Recipe = require("../models/Recipe");
 
 const getAll = async (req, res) => {
 	const limit = 9;
-	const result = await Recipe.findOne().limit(limit);
+	const result = await Recipe.find().limit(limit);
 	res.json(result);
 };
 
