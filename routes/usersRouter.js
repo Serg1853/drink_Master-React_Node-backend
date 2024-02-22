@@ -24,6 +24,6 @@ usersRouter.patch(
   updateSubscription
 );
 
-usersRouter.patch("/update", authenticate);
+// usersRouter.patch("/update", authenticate);
 
 module.exports = usersRouter;
