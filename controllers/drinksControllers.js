@@ -11,6 +11,7 @@ const getAll = async (req, res) => {
 
 const findDrinkByFiltrs = async (req, res) => {
 	const { category, ingredient, drink } = req.body;
+	const { page = 1, limit = 9 } = req.query;
 
 	const query = {};
 	category && (query.category = category);
@@ -21,7 +22,9 @@ const findDrinkByFiltrs = async (req, res) => {
 
 	const result = await Recipe.find({
 		name: { $regex: keyWord, $options: "i" },
-	});
+	})
+		.limit(limit)
+		.skip((page - 1) * limit);
 	res.json(result);
 };
 
