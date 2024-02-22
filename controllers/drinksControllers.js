@@ -3,30 +3,25 @@ const Recipe = require("../models/Recipe");
 const { User } = require("../models/User");
 
 const getAll = async (req, res) => {
-	const { page = 1, limit = 9 } = req.query;
-	const skip = (page - 1) * limit;
-	const result = await Recipe.find({
-		skip,
-		limit,
-	});
+	const { limit = 9 } = req.query;
+
+	const result = await Recipe.find().limit(limit);
 	res.json(result);
 };
 
 const findDrinkByFiltrs = async (req, res) => {
-	const { category, ingredient, drinkStartsWith } = req.body;
+	const { category, ingredient, drink } = req.body;
 
-	let query = {};
-	if (category) {
-		query.category = category;
-	}
-	if (ingredient) {
-		query["ingredients.title"] = ingredient;
-	}
-	if (drinkStartsWith) {
-		query.drink = { $regex: new RegExp("^" + drinkStartsWith, "i") };
-	}
+	const query = {};
+	category && (query.category = category);
 
-	const result = await Recipe.find(query);
+	ingredient && (query.ingredients = { $elemMatch: { id: ingredient } });
+
+	drink && (query.drink = { $regex: drink, $options: "i" });
+
+	const result = await Recipe.find({
+		name: { $regex: keyWord, $options: "i" },
+	});
 	res.json(result);
 };
 
