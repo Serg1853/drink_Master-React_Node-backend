@@ -92,9 +92,13 @@ const getFavorite = async (req, res) => {
 const deleteFavorite = async (req, res) => {
   const { id } = req.params;
   const { _id: owner } = req.user;
-  const result = await Recipe.findByIdAndUpdate(id, {
-    $pull: { users: owner },
-  });
+  const result = await Recipe.findByIdAndUpdate(
+    id,
+    {
+      $pull: { users: owner },
+    },
+    { new: true }
+  );
   res.json(result);
 };
 
