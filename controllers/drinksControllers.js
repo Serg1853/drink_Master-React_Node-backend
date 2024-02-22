@@ -2,7 +2,7 @@ const { ctrlWrapper, HttpError } = require("../helpers");
 const Recipe = require("../models/Recipe");
 
 const getAll = async (req, res) => {
-	const limit = 9;
+	const limit = 12;
 	const result = await Recipe.find().limit(limit);
 	res.json(result);
 };
