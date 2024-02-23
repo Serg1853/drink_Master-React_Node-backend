@@ -81,10 +81,20 @@ const removeOwnDrink = async (req, res) => {
 };
 
 const getPopularDrinks = async (req, res) => {
+	const { age } = req.user;
+
+	let filter = {};
+	if (age < 18) {
+		filter.alcoholic = "Non alcoholic";
+	} else {
+		filter.alcoholic = "Alcoholic";
+	}
+
 	const popularDrinks = await Recipe.aggregate([
 		{
 			$match: {
 				users: { $exists: true, $ne: [] },
+				...filter,
 			},
 		},
 		{
