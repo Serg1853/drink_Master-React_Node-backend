@@ -16,7 +16,7 @@ const {
 	deleteFavorite,
 } = require("../controllers/drinksControllers");
 
-drinksRouter.get("/mainpage", getAll);
+drinksRouter.get("/mainpage", authenticate, getAll);
 
 drinksRouter.get("/:id", getById);
 
