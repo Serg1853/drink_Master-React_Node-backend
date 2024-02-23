@@ -1,14 +1,12 @@
 const express = require("express");
 const ctrl = require("../controllers/filtersDrinksControllers");
 
-// const authenticate = require("../middlewares/authenticate");
-
 const filtersDrinksRouter = express.Router();
 
-filtersDrinksRouter.get("/categories", ctrl.getCategoriesController);
+filtersDrinksRouter.get("/categories", ctrl.getCategories);
 
-filtersDrinksRouter.get("/glasses", ctrl.getGlassesController);
+filtersDrinksRouter.get("/glasses", ctrl.getGlasses);
 
-filtersDrinksRouter.get("/ingredients", ctrl.getIngredientsController);
+filtersDrinksRouter.get("/ingredients", ctrl.getIngredients);
 
 module.exports = filtersDrinksRouter;

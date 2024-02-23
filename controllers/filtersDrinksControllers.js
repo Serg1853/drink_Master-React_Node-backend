@@ -1,5 +1,5 @@
 const ctrlWrapper = require("../helpers/ctrlWrapper");
-const categories = require("../models/categories");
+const categories = require("../models/Categories");
 const glasses = require("../models/Glasses");
 const Ingredient = require("../models/Ingredient");
 
@@ -19,7 +19,7 @@ const getIngredientsController = async (req, res) => {
 };
 
 module.exports = {
-	getCategoriesController: ctrlWrapper(getCategoriesController),
-	getGlassesController: ctrlWrapper(getGlassesController),
-	getIngredientsController: ctrlWrapper(getIngredientsController),
+	getCategories: ctrlWrapper(getCategoriesController),
+	getGlasses: ctrlWrapper(getGlassesController),
+	getIngredients: ctrlWrapper(getIngredientsController),
 };
