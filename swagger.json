@@ -473,19 +473,22 @@
         }
       },
       "NameUserUpdate": {
-        "name": {
-          "type": "string",
-          "minLength": 2,
-          "maxLength": 32,
-          "examples": ["Vlad Beck"]
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 32,
+            "examples": ["Vlad"]
+          }
         }
-      }
-    },
-    "securitySchemes": {
-      "Bearer": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
+      },
+      "securitySchemes": {
+        "Bearer": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
       }
     }
   }
