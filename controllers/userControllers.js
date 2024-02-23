@@ -13,7 +13,7 @@ require("dotenv").config();
 const { SECRET_KEY } = process.env;
 
 const signupUser = async (req, res, next) => {
-	const { name, email, password } = req.body;
+	const { name, email, password, age } = req.body;
 	const user = await User.findOne({ email });
 
 	if (user) {
@@ -39,6 +39,7 @@ const signupUser = async (req, res, next) => {
 			name,
 			email,
 			avatarURL,
+			age,
 		},
 	});
 };
