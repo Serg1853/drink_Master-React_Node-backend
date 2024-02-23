@@ -7,9 +7,9 @@ const {
 } = require("../schemas/userSchemas");
 
 const {
-  signupUser,
-  signinUser,
-  signoutUser,
+	signupUser,
+	signinUser,
+	signoutUser,
 } = require("../controllers/userControllers");
 
 const authRouter = express.Router();
