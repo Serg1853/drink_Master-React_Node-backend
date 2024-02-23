@@ -18,11 +18,9 @@ const {
 
 drinksRouter.get("/mainpage", authenticate, getAll);
 
-drinksRouter.get("/:id", getById);
+drinksRouter.get("/popular", authenticate, getPopularDrinks);
 
-drinksRouter.get("/popular", getPopularDrinks);
-
-drinksRouter.get("/search", findDrinkByFiltrs);
+drinksRouter.get("/search", authenticate, findDrinkByFiltrs);
 
 drinksRouter.post(
 	"/own/add",
@@ -36,10 +34,12 @@ drinksRouter.delete("/own/remove", authenticate, removeOwnDrink);
 
 drinksRouter.get("/own", authenticate, getOwnDrink);
 
+drinksRouter.get("/favorite", authenticate, getFavorite);
+
 drinksRouter.post("/favorite/add/:id", authenticate, addFavorite);
 
 drinksRouter.delete("/favorite/remove/:id", authenticate, deleteFavorite);
 
-drinksRouter.get("/favorite", authenticate, getFavorite);
+drinksRouter.get("/:id", authenticate, getById);
 
 module.exports = drinksRouter;
