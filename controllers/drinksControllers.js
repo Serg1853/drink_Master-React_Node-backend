@@ -3,19 +3,35 @@ const mongoose = require("mongoose");
 const { ctrlWrapper, HttpError } = require("../helpers");
 const Recipe = require("../models/Recipe");
 const Ingredient = require("../models/Ingredient");
+const { User } = require("../models/User");
 
 const getAll = async (req, res) => {
+	const { age } = req.user;
+
+	let filter = {};
+	if (age < 18) {
+		filter.alcoholic = "Non alcoholic";
+	} else {
+		filter.alcoholic = "Alcoholic";
+	}
+	const result = await Recipe.find(filter);
+
 	// const limit = 20;
 	// const result = await Recipe.find().limit(limit);
-	const result = await Recipe.find();
 	res.json(result);
 };
 
 const findDrinkByFiltrs = async (req, res) => {
+	const { age } = req.user;
 	const { category, ingredient, keyWord } = req.body;
 	const { page = 1, limit = 9 } = req.query;
 
-	const query = {};
+	let query = {};
+	if (age < 18) {
+		query.alcoholic = "Non alcoholic";
+	} else {
+		query.alcoholic = "Alcoholic";
+	}
 	category && (query.category = category);
 
 	ingredient && (query.ingredients = { $elemMatch: { id: ingredient } });
