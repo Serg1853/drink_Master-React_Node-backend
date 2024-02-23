@@ -14,7 +14,14 @@ const getGlassesController = async (req, res) => {
 };
 
 const getIngredientsController = async (req, res) => {
-	const result = await Ingredient.find();
+	const { age } = req.user;
+	let filter = {};
+	if (age < 18) {
+		filter.alcohol = "No";
+	} else {
+		filter.alcohol = "Yes";
+	}
+	const result = await Ingredient.find(filter);
 	res.json(result);
 };
 
