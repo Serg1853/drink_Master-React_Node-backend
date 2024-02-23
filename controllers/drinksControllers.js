@@ -24,7 +24,7 @@ const getAll = async (req, res) => {
 const findDrinkByFiltrs = async (req, res) => {
 	const { age } = req.user;
 	const { category, ingredient, keyWord } = req.body;
-	const { page = 1, limit = 9 } = req.query;
+	// const { page = 1, limit = 9 } = req.query;
 
 	let query = {};
 	if (age < 18) {
@@ -39,9 +39,9 @@ const findDrinkByFiltrs = async (req, res) => {
 	keyWord && (query.drink = { $regex: keyWord, $options: "i" });
 	keyWord && (query.description = { $regex: keyWord, $options: "i" });
 
-	const result = await Recipe.find(query)
-		.limit(limit)
-		.skip((page - 1) * limit);
+	const result = await Recipe.find(query);
+	// .limit(limit)
+	// .skip((page - 1) * limit);
 	res.json(result);
 };
 
@@ -81,10 +81,20 @@ const removeOwnDrink = async (req, res) => {
 };
 
 const getPopularDrinks = async (req, res) => {
+	const { age } = req.user;
+
+	let filter = {};
+	if (age < 18) {
+		filter.alcoholic = "Non alcoholic";
+	} else {
+		filter.alcoholic = "Alcoholic";
+	}
+
 	const popularDrinks = await Recipe.aggregate([
 		{
 			$match: {
 				users: { $exists: true, $ne: [] },
+				...filter,
 			},
 		},
 		{
