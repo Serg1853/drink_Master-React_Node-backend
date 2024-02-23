@@ -21,7 +21,7 @@
     }
   ],
   "paths": {
-    "/users/signup": {
+    "/auth/signup": {
       "post": {
         "tags": ["Auth"],
         "summary": "User registration",
@@ -53,7 +53,7 @@
         }
       }
     },
-    "/users/signin": {
+    "/auth/signin": {
       "post": {
         "tags": ["Auth"],
         "summary": "User login",
@@ -85,7 +85,7 @@
         }
       }
     },
-    "/user/logout": {
+    "/auth/signout": {
       "post": {
         "tags": ["Auth"],
         "summary": "User logout",
@@ -108,7 +108,7 @@
         }
       }
     },
-    "/user/current": {
+    "/users/current": {
       "get": {
         "tags": ["User"],
         "summary": "Get information about the current user",
@@ -131,7 +131,44 @@
         }
       }
     },
-    "/users/avatars": {
+    "/users/update/name": {
+      "patch": {
+        "tags": ["User"],
+        "summary": "Add or update user name",
+        "description": "Add or update user name",
+        "requestBody": {
+          "description": "Update user name",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NameUserUpdate"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/NameUserResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/users/update/avatar": {
       "patch": {
         "tags": ["User"],
         "summary": "Add or update user avatar",
@@ -157,7 +194,7 @@
               }
             }
           },
-          "required": true
+          "required": false
         },
         "responses": {
           "200": {
@@ -265,11 +302,6 @@
             "schema": {
               "type": "object",
               "properties": {
-                "_id": {
-                  "type": "string",
-                  "description": "Backend-generated unique identifier",
-                  "examples": ["65cce18f4df19108f425586d"]
-                },
                 "token": {
                   "type": "string",
                   "description": "Bearer token",
@@ -291,6 +323,10 @@
                       "examples": [
                         "//www.gravatar.com/avatar/97d3723787b96f4804a076d9d009dfdf"
                       ]
+                    },
+                    "age": {
+                      "type": "number",
+                      "description": "User age"
                     }
                   }
                 }
@@ -306,11 +342,6 @@
             "schema": {
               "type": "object",
               "properties": {
-                "_id": {
-                  "type": "string",
-                  "description": "Backend-generated unique identifier",
-                  "examples": ["65cce18f4df19108f425586d"]
-                },
                 "token": {
                   "type": "string",
                   "description": "Bearer token",
@@ -332,6 +363,16 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/User"
+            }
+          }
+        }
+      },
+      "NameUserResponse": {
+        "description": "The user's name is updated",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#components/schemas/NameUserUpdate"
             }
           }
         }
@@ -404,6 +445,11 @@
             "description": "User's password",
             "format": "password",
             "examples": ["qwerty123"]
+          },
+          "age": {
+            "type": "number",
+            "description": "User age",
+            "examples": ["25"]
           }
         }
       },
@@ -424,6 +470,24 @@
             "format": "password",
             "examples": ["qwerty123"]
           }
+        }
+      },
+      "NameUserUpdate": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 32,
+            "examples": ["Vlad"]
+          }
+        }
+      },
+      "securitySchemes": {
+        "Bearer": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
         }
       }
     }

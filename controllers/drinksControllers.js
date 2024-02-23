@@ -138,22 +138,21 @@ const getPopularDrinks = async (req, res) => {
 };
 
 const getFavorite = async (req, res) => {
-	const { _id: owner } = req.user;
-	console.log(req.user);
-	const favoriteDrinks = await Recipe.find({ users: owner }).populate("owner");
-	res.json(favoriteDrinks);
+  const { _id: owner } = req.user;
+  const favoriteDrinks = await Recipe.find({ users: owner }).populate("owner");
+  res.json(favoriteDrinks);
 };
 
 const addFavorite = async (req, res) => {
-	const { id } = req.params;
-	const { _id: owner } = req.user;
+  const { id } = req.params;
+  const { _id: owner } = req.user;
 
-	const result = await Recipe.findByIdAndUpdate(
-		id,
-		{ $push: { users: owner } },
-		{ new: true }
-	);
-	res.json(result);
+  const result = await Recipe.findByIdAndUpdate(
+    id,
+    { $addToSet: { users: owner } },
+    { new: true }
+  );
+  res.json(result);
 };
 
 const deleteFavorite = async (req, res) => {
