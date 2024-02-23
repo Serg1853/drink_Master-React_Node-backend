@@ -265,11 +265,6 @@
             "schema": {
               "type": "object",
               "properties": {
-                "_id": {
-                  "type": "string",
-                  "description": "Backend-generated unique identifier",
-                  "examples": ["65cce18f4df19108f425586d"]
-                },
                 "token": {
                   "type": "string",
                   "description": "Bearer token",
@@ -291,6 +286,10 @@
                       "examples": [
                         "//www.gravatar.com/avatar/97d3723787b96f4804a076d9d009dfdf"
                       ]
+                    },
+                    "age": {
+                      "type": "number",
+                      "description": "User age"
                     }
                   }
                 }
@@ -404,6 +403,10 @@
             "description": "User's password",
             "format": "password",
             "examples": ["qwerty123"]
+          },
+          "age": {
+            "type": "number",
+            "description": "User age"
           }
         }
       },
