@@ -53,7 +53,7 @@
         }
       }
     },
-    "/users/signin": {
+    "/auth/signin": {
       "post": {
         "tags": ["Auth"],
         "summary": "User login",
@@ -85,7 +85,7 @@
         }
       }
     },
-    "/user/logout": {
+    "/auth/signout": {
       "post": {
         "tags": ["Auth"],
         "summary": "User logout",
@@ -305,11 +305,6 @@
             "schema": {
               "type": "object",
               "properties": {
-                "_id": {
-                  "type": "string",
-                  "description": "Backend-generated unique identifier",
-                  "examples": ["65cce18f4df19108f425586d"]
-                },
                 "token": {
                   "type": "string",
                   "description": "Bearer token",
