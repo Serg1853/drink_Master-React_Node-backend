@@ -21,7 +21,7 @@ const getAll = async (req, res) => {
 	res.json(result);
 };
 
-nst findDrinkByFiltrs = async (req, res) => {
+findDrinkByFiltrs = async (req, res) => {
   const { age } = req.user;
   //   const { category, ingredient, keyWord } = req.body;
   const { page = 1, limit = 9 } = req.query;
