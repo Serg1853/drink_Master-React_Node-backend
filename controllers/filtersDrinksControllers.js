@@ -1,5 +1,5 @@
 const ctrlWrapper = require("../helpers/ctrlWrapper");
-const categories = require("../models/Categories");
+const categories = require("../models/сategories");
 const glasses = require("../models/Glasses");
 const Ingredient = require("../models/Ingredient");
 
