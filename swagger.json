@@ -136,6 +136,16 @@
         "tags": ["User"],
         "summary": "Add or update user name",
         "description": "Add or update user name",
+        "requestBody": {
+          "description": "Update user name",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NameUserUpdate"
+              }
+            }
+          }
+        },
         "security": [
           {
             "Bearer": []
