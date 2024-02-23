@@ -108,7 +108,7 @@
         }
       }
     },
-    "/user/current": {
+    "/users/current": {
       "get": {
         "tags": ["User"],
         "summary": "Get information about the current user",
@@ -131,7 +131,34 @@
         }
       }
     },
-    "/users/avatars": {
+    "/users/update/name": {
+      "patch": {
+        "tags": ["User"],
+        "summary": "Add or update user name",
+        "description": "Add or update user name",
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/NameUserResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/users/update/avatar": {
       "patch": {
         "tags": ["User"],
         "summary": "Add or update user avatar",
@@ -157,7 +184,7 @@
               }
             }
           },
-          "required": true
+          "required": false
         },
         "responses": {
           "200": {
@@ -330,6 +357,16 @@
           }
         }
       },
+      "NameUserResponse": {
+        "description": "The user's name is updated",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#components/schemas/NameUserUpdate"
+            }
+          }
+        }
+      },
       "AvatarsResponse": {
         "description": "The user's avatar is updated",
         "content": {
@@ -401,7 +438,8 @@
           },
           "age": {
             "type": "number",
-            "description": "User age"
+            "description": "User age",
+            "examples": ["25"]
           }
         }
       },
@@ -423,6 +461,21 @@
             "examples": ["qwerty123"]
           }
         }
+      },
+      "NameUserUpdate": {
+        "name": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 32,
+          "examples": ["Vlad Beck"]
+        }
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   }
