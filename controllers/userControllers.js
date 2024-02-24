@@ -71,8 +71,8 @@ const signinUser = async (req, res, next) => {
 };
 
 const getCurrent = (req, res) => {
-	const { email, name, avatar: avatarURL } = req.user;
-	res.status(200).json({ email, name, avatarURL });
+	const { email, name, avatarURL } = req.user;
+  res.status(200).json({ email: email, name: name, avatar: avatarURL });
 };
 
 const signoutUser = async (req, res) => {
