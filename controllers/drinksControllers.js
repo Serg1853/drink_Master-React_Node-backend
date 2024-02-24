@@ -26,27 +26,25 @@ const getAll = async (req, res) => {
 };
 
 const findDrinkByFiltrs = async (req, res) => {
-  const { age } = req.user;
-  const { category, ingredient, keyWord } = req.body;
-  // const { page = 1, limit = 9 } = req.query;
+	const { age } = req.user;
+	const { category, ingredient, keyWord } = req.body;
 
-  let query = {};
-  if (age < 18) {
-    query.alcoholic = "Non alcoholic";
-  } else {
-    query.alcoholic = "Alcoholic";
-  }
-  category && (query.category = category);
+	let query = {};
+	if (age < 18) {
+		query.alcoholic = "Non alcoholic";
+	} else {
+		query.alcoholic = "Alcoholic";
+	}
+	category && (query.category = category);
 
-  ingredient && (query.ingredients = { $elemMatch: { id: ingredient } });
+	ingredient &&
+		(query["ingredients.title"] = { $regex: ingredient, $options: "i" });
 
-  keyWord && (query.drink = { $regex: keyWord, $options: "i" });
-  keyWord && (query.description = { $regex: keyWord, $options: "i" });
+	keyWord && (query.drink = { $regex: keyWord, $options: "i" });
+	keyWord && (query.description = { $regex: keyWord, $options: "i" });
 
-  const result = await Recipe.find(query);
-  // .limit(limit)
-  // .skip((page - 1) * limit);
-  res.json(result);
+	const result = await Recipe.find(query);
+	res.json(result);
 };
 
 const getById = async (req, res, next) => {
