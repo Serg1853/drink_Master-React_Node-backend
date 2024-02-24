@@ -402,6 +402,41 @@
           }
         }
       }
+    },
+    "/drinks/favorite/remove/{id}": {
+      "post": {
+        "tags": ["Drinks"],
+        "summary": "Remove cocktail in favorite",
+        "description": "Remove cocktails in favorite by id",
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Remove cocktails in favorite by id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "examples": ["639b6de9ff77d221f190c53e"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/RemoveFavoriteByIdResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
     }
   },
 
@@ -1101,6 +1136,22 @@
                 "users": [
                   { "type": "string", "examples": ["65d62d46a55ef251fe5c5a72"] }
                 ]
+              }
+            }
+          }
+        }
+      },
+      "RemoveFavoriteByIdResponse": {
+        "description": "Remove cocktails in favorite by id",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "examples": ["Cocktail is delete"]
+                }
               }
             }
           }

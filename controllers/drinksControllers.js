@@ -142,7 +142,9 @@ const deleteFavorite = async (req, res) => {
 		},
 		{ new: true }
 	);
-	res.json(result);
+	res.json({
+    message: "Cocktail is delete",
+  });
 };
 
 module.exports = {
