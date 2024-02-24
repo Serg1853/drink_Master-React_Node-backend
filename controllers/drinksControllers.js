@@ -14,10 +14,10 @@ const getAll = async (req, res) => {
 	} else {
 		filter.alcoholic = "Alcoholic";
 	}
-	const result = await Recipe.find(filter);
+	// const result = await Recipe.find(filter);
 
-	// const limit = 20;
-	// const result = await Recipe.find().limit(limit);
+	const limit = 150;
+	const result = await Recipe.find(filter).limit(limit);
 	res.json(result);
 };
 
