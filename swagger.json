@@ -221,21 +221,69 @@
       "get": {
         "tags": ["Filters"],
         "summary": "Filter categories",
-        "description": "Filter cocktails from categories"
+        "description": "Filter cocktails from categories",
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CategoriesResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
       }
     },
     "/filters/glasses": {
       "get": {
         "tags": ["Filters"],
         "summary": "Filter glasses",
-        "description": "Filter cocktails from glasses"
+        "description": "Filter cocktails from glasses",
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GlassesResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
       }
     },
     "/filters/ingredients": {
       "get": {
         "tags": ["Filters"],
         "summary": "Filter ingredients",
-        "description": "Filter cocktails from ingredients"
+        "description": "Filter cocktails from ingredients",
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/IngredientsResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
       }
     }
   },
@@ -417,6 +465,116 @@
                   "examples": [
                     "//www.gravatar.com/avatar/97d3723787b96f4804a076d9d009dfdf"
                   ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "CategoriesResponse": {
+        "description": "Successfully get categories",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "_id": {
+                  "type": "string",
+                  "description": "Cocktails id",
+                  "examples": ["6vNFPFUs4HmkLZYYYDpBr"]
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Name cocktails",
+                  "examples": ["Beer"]
+                }
+              }
+            }
+          }
+        }
+      },
+      "GlassesResponse": {
+        "description": "Successfully get glasses",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "_id": {
+                  "type": "string",
+                  "description": "Cocktails id",
+                  "examples": ["frsAJ4SHPYqZeG-83QTVW"]
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Name cocktails",
+                  "examples": ["Highball glass"]
+                }
+              }
+            }
+          }
+        }
+      },
+      "IngredientsResponse": {
+        "description": "Successfully get glasses",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "_id": {
+                  "type": "string",
+                  "description": "Cocktails id",
+                  "examples": ["64aebb7f82d96cc69e0eb4a5"]
+                },
+                "title": {
+                  "type": "string",
+                  "description": "Name cocktails",
+                  "examples": ["Applejack"]
+                },
+                "ingredientThumb": {
+                  "type": "string",
+                  "description": "Picture cocktails",
+                  "examples": [
+                    "https://ftp.goit.study/img/drinkify/ingredients/Applejack.png"
+                  ]
+                },
+                "thumb-medium": {
+                  "type": "string",
+                  "description": "Picture cocktails",
+                  "examples": [
+                    "https://ftp.goit.study/img/drinkify/ingredients/Applejack-Medium.png"
+                  ]
+                },
+                "thumb-small": {
+                  "type": "string",
+                  "description": "Picture cocktails",
+                  "examples": [
+                    "https://ftp.goit.study/img/drinkify/ingredients/Applejack-Small.png"
+                  ]
+                },
+                "abv": {
+                  "type": "string",
+                  "examples": ["40"]
+                },
+                "alcohol": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Description cocktail"
+                },
+                "type": {
+                  "type": "string",
+                  "examples": ["Beverage"]
+                },
+                "flavour": {
+                  "type": "string",
+                  "examples": ["apples, oak"]
+                },
+                "country": {
+                  "type": "string",
+                  "examples": ["United States"]
                 }
               }
             }
