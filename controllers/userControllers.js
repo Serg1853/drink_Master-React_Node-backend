@@ -85,7 +85,7 @@ const signoutUser = async (req, res) => {
 const updateUser = async (req, res) => {
 	const { _id, name } = req.user;
 	const newName = req.body.name;
-	await User.findByIdAndUpdate(_id, { name: newName });
+	await User.findByIdAndUpdate(_id, { name: newName }, { new: true });
 	res.json({ name });
 };
 
