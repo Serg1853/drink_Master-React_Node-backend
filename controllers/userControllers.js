@@ -72,7 +72,6 @@ const signinUser = async (req, res, next) => {
 
 const getCurrent = (req, res) => {
 	const { email, name, avatarURL } = req.user;
-  console.log("avatar", avatarURL);
   res.status(200).json({ email: email, name: name, avatar: avatarURL });
 };
 
