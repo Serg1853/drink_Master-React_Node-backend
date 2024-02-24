@@ -16,10 +16,15 @@
       "description": "Authorization endpoints"
     },
     {
-      "name": "User",
+      "name": "Users",
       "description": "User endpoints"
+    },
+    {
+      "name": "Filters",
+      "description": "Filter cocktails"
     }
   ],
+
   "paths": {
     "/auth/signup": {
       "post": {
@@ -110,7 +115,7 @@
     },
     "/users/current": {
       "get": {
-        "tags": ["User"],
+        "tags": ["Users"],
         "summary": "Get information about the current user",
         "description": "Get information about the current user",
         "security": [
@@ -133,7 +138,7 @@
     },
     "/users/update/name": {
       "patch": {
-        "tags": ["User"],
+        "tags": ["Users"],
         "summary": "Add or update user name",
         "description": "Add or update user name",
         "requestBody": {
@@ -141,7 +146,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NameUserUpdate"
+                "$ref": "#/components/schemas/UserUpdateName"
               }
             }
           }
@@ -154,7 +159,7 @@
 
         "responses": {
           "200": {
-            "$ref": "#/components/responses/NameUserResponse"
+            "$ref": "#/components/responses/UserResponse"
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
@@ -170,7 +175,7 @@
     },
     "/users/update/avatar": {
       "patch": {
-        "tags": ["User"],
+        "tags": ["Users"],
         "summary": "Add or update user avatar",
         "description": "Add or update user avatar",
         "security": [
@@ -210,6 +215,27 @@
             "$ref": "#/components/responses/ServerError"
           }
         }
+      }
+    },
+    "/filters/categories": {
+      "get": {
+        "tags": ["Filters"],
+        "summary": "Filter categories",
+        "description": "Filter cocktails from categories"
+      }
+    },
+    "/filters/glasses": {
+      "get": {
+        "tags": ["Filters"],
+        "summary": "Filter glasses",
+        "description": "Filter cocktails from glasses"
+      }
+    },
+    "/filters/ingredients": {
+      "get": {
+        "tags": ["Filters"],
+        "summary": "Filter ingredients",
+        "description": "Filter cocktails from ingredients"
       }
     }
   },
@@ -367,12 +393,12 @@
           }
         }
       },
-      "NameUserResponse": {
+      "UserResponse": {
         "description": "The user's name is updated",
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#components/schemas/NameUserUpdate"
+              "$ref": "#/components/schemas/UserUpdateName"
             }
           }
         }
@@ -472,7 +498,7 @@
           }
         }
       },
-      "NameUserUpdate": {
+      "UserUpdateName": {
         "type": "object",
         "properties": {
           "name": {
@@ -482,13 +508,13 @@
             "examples": ["Vlad"]
           }
         }
-      },
-      "securitySchemes": {
-        "Bearer": {
-          "type": "http",
-          "scheme": "bearer",
-          "bearerFormat": "JWT"
-        }
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   }
