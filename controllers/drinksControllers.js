@@ -6,23 +6,24 @@ const Ingredient = require("../models/Ingredient");
 const { User } = require("../models/User");
 
 const getAll = async (req, res) => {
-  const { age } = req.user;
 
-  let filter = {};
-  if (age < 18) {
-    filter.alcoholic = "Non alcoholic";
-  } else {
-    filter.alcoholic = "Alcoholic";
-  }
-  // const result = await Recipe.find(filter);
+	const { age } = req.user;
 
-  const limit = 150;
-  const result = await Recipe.aggregate([
-    { $match: filter },
-    { $sample: { size: limit } },
-  ]);
+	let filter = {};
+	if (age < 18) {
+		filter.alcoholic = "Non alcoholic";
+	} else {
+		filter.alcoholic = "Alcoholic";
+	}
+	// const result = await Recipe.find(filter);
 
-  res.json(result);
+	const limit = 200;
+	const result = await Recipe.aggregate([
+		{ $match: filter },
+		{ $sample: { size: limit } },
+	]);
+
+	res.json(result);
 };
 
 const findDrinkByFiltrs = async (req, res) => {
