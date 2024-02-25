@@ -333,6 +333,43 @@
         }
       }
     },
+    "/drinks/search": {
+      "get": {
+        "tags": ["Drinks"],
+        "summary": "Drinks search",
+        "description": "Search cocktail by params",
+        "requestBody": {
+          "description": "Search object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "$ref": "#/components/responses/SearchResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "409": {
+            "$ref": "#/components/responses/EmailInUse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
     "/drinks/{id}": {
       "get": {
         "tags": ["Drinks"],
@@ -404,7 +441,7 @@
       }
     },
     "/drinks/favorite/remove/{id}": {
-      "post": {
+      "delete": {
         "tags": ["Drinks"],
         "summary": "Remove cocktail in favorite",
         "description": "Remove cocktails in favorite by id",
@@ -428,6 +465,29 @@
         "responses": {
           "200": {
             "$ref": "#/components/responses/RemoveFavoriteByIdResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/drinks/favorite": {
+      "get": {
+        "tags": ["Drinks"],
+        "summary": "Favorite drinks",
+        "description": "Get favorite cocktails",
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/FavoriteDrinksResponse"
           },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
@@ -868,6 +928,159 @@
           }
         }
       },
+      "SearchResponse": {
+        "description": "Successfully get all cocktails",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "_id": {
+                  "type": "string",
+                  "description": "Cocktails id",
+                  "examples": ["639b6de9ff77d221f190c51b"]
+                },
+                "drink": {
+                  "type": "string",
+                  "description": "Name cocktails",
+                  "examples": ["Adam"]
+                },
+                "drinkAlternate": {
+                  "type": "string"
+                },
+                "tags": {
+                  "type": "string",
+                  "examples": ["Alcoholic,Holiday"]
+                },
+                "video": {
+                  "type": "string",
+                  "examples": ["Sorry, not specified"]
+                },
+                "category": {
+                  "type": "string",
+                  "examples": ["Ordinary Drink"]
+                },
+                "IBA": {
+                  "type": "string"
+                },
+                "alcoholic": {
+                  "type": "string"
+                },
+                "glass": {
+                  "type": "string",
+                  "examples": ["Cocktail glass"]
+                },
+                "description": {
+                  "type": "string"
+                },
+                "instructions": {
+                  "type": "string"
+                },
+                "instructionsES": {
+                  "type": "string"
+                },
+                "instructionsDE": {
+                  "type": "string"
+                },
+                "instructionsFR": {
+                  "type": "string"
+                },
+                "instructionsIT": {
+                  "type": "string"
+                },
+                "instructionsRU": {
+                  "type": "string"
+                },
+                "instructionsPL": {
+                  "type": "string"
+                },
+                "instructionsUK": {
+                  "type": "string"
+                },
+                "drinkThumb": {
+                  "type": "string",
+                  "description": "Picture cocktails",
+                  "examples": [
+                    "https://ftp.goit.study/img/drinkify/recipes/Adam.jpg"
+                  ]
+                },
+                "ingredients": [
+                  {
+                    "_id": {
+                      "type": "string",
+                      "description": "Id ingredients",
+                      "examples": ["65db0b021aefaf3f0436199e"]
+                    },
+                    "title": {
+                      "type": "string",
+                      "examples": ["Dark rum"]
+                    },
+                    "measure": {
+                      "type": "string",
+                      "examples": ["2 oz"]
+                    },
+                    "ingredientId": {
+                      "type": "string",
+                      "description": "Id ingredients",
+                      "examples": ["64aebb7f82d96cc69e0eb4a7"]
+                    }
+                  },
+                  {
+                    "_id": {
+                      "type": "string",
+                      "description": "Id ingredients",
+                      "examples": ["65db0b021aefaf3f0436199f"]
+                    },
+                    "title": {
+                      "type": "string",
+                      "examples": ["Lemon juice"]
+                    },
+                    "measure": {
+                      "type": "string",
+                      "examples": ["1 oz"]
+                    },
+                    "ingredientId": {
+                      "type": "string",
+                      "description": "Id ingredients",
+                      "examples": ["64aebb7f82d96cc69e0eb4d3"]
+                    }
+                  },
+                  {
+                    "_id": {
+                      "type": "string",
+                      "description": "Id ingredients",
+                      "examples": ["65db0b021aefaf3f043619a0"]
+                    },
+                    "title": {
+                      "type": "string",
+                      "examples": ["Grenadine"]
+                    },
+                    "measure": {
+                      "type": "string",
+                      "examples": ["1 tsp"]
+                    },
+                    "ingredientId": {
+                      "type": "string",
+                      "description": "Id ingredients",
+                      "examples": ["64aebb7f82d96cc69e0eb4c7"]
+                    }
+                  }
+                ],
+                "shortDescription": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "examples": ["2024-02-25T09:14:23.904Z"]
+                },
+                "users": [
+                  { "type": "string", "examples": ["65d62d46a55ef251fe5c5a72"] }
+                ]
+              }
+            }
+          }
+        }
+      },
       "PopularDrinksResponse": {
         "description": "Successfully get all cocktails",
         "content": {
@@ -1001,6 +1214,141 @@
                 "usersCount": {
                   "type": "string"
                 }
+              }
+            }
+          }
+        }
+      },
+      "FavoriteDrinksResponse": {
+        "description": "Successfully get all cocktails",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "_id": {
+                  "type": "string",
+                  "description": "Cocktails id",
+                  "examples": ["639b6de9ff77d221f190c50d"]
+                },
+                "drink": {
+                  "type": "string",
+                  "description": "Name cocktails",
+                  "examples": ["Iced Coffee Fillip"]
+                },
+                "drinkAlternate": {
+                  "type": "string"
+                },
+                "tags": {
+                  "type": "string",
+                  "examples": ["Coffee / Tea,IBA,NewEra"]
+                },
+                "video": {
+                  "type": "string",
+                  "examples": [
+                    "https://youtu.be/3E__KEFweRI?si=nkzSORYlM6OBHJj7"
+                  ]
+                },
+                "category": {
+                  "type": "string",
+                  "examples": ["Coffee / Tea"]
+                },
+                "IBA": {
+                  "type": "string"
+                },
+                "alcoholic": {
+                  "type": "string"
+                },
+                "glass": {
+                  "type": "string",
+                  "examples": ["Coffee mug"]
+                },
+                "description": {
+                  "type": "string"
+                },
+                "instructions": {
+                  "type": "string"
+                },
+                "instructionsES": {
+                  "type": "string"
+                },
+                "instructionsDE": {
+                  "type": "string"
+                },
+                "instructionsFR": {
+                  "type": "string"
+                },
+                "instructionsIT": {
+                  "type": "string"
+                },
+                "instructionsRU": {
+                  "type": "string"
+                },
+                "instructionsPL": {
+                  "type": "string"
+                },
+                "instructionsUK": {
+                  "type": "string"
+                },
+                "drinkThumb": {
+                  "type": "string",
+                  "description": "Picture cocktails",
+                  "examples": [
+                    "https://ftp.goit.study/img/drinkify/recipes/Iced_Coffee_Fillip.jpg"
+                  ]
+                },
+                "ingredients": [
+                  {
+                    "_id": {
+                      "type": "string",
+                      "description": "Id ingredients",
+                      "examples": ["65d9f61e4bf8695f1b781226"]
+                    },
+                    "title": {
+                      "type": "string",
+                      "examples": ["Kahlua"]
+                    },
+                    "measure": {
+                      "type": "string",
+                      "examples": ["2 tsp"]
+                    },
+                    "ingredientId": {
+                      "type": "string",
+                      "description": "Id ingredients",
+                      "examples": ["64aebb7f82d96cc69e0eb4bd"]
+                    }
+                  },
+                  {
+                    "_id": {
+                      "type": "string",
+                      "description": "Id ingredients",
+                      "examples": ["65d9f61e4bf8695f1b781227"]
+                    },
+                    "title": {
+                      "type": "string",
+                      "examples": ["Coffee"]
+                    },
+                    "measure": {
+                      "type": "string",
+                      "examples": ["Strong cold"]
+                    },
+                    "ingredientId": {
+                      "type": "string",
+                      "description": "Id ingredients",
+                      "examples": ["64aebb7f82d96cc69e0eb4e7"]
+                    }
+                  }
+                ],
+                "shortDescription": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "examples": ["2024-02-23T20:57:31.787Z"]
+                },
+                "users": [
+                  { "type": "string", "examples": ["65d62d46a55ef251fe5c5a72"] }
+                ]
               }
             }
           }
@@ -1425,6 +1773,24 @@
             "minLength": 2,
             "maxLength": 32,
             "examples": ["Vlad"]
+          }
+        }
+      },
+      "SearchRequest": {
+        "type": "object",
+        "required": ["category", "ingredient", "keyWord"],
+        "properties": {
+          "category": {
+            "type": "string",
+            "examples": ["Ordinary Drink"]
+          },
+          "ingredient": {
+            "type": "string",
+            "examples": ["Dark rum"]
+          },
+          "keyWord": {
+            "type": "string",
+            "examples": ["a"]
           }
         }
       }
