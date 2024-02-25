@@ -497,6 +497,88 @@
           }
         }
       }
+    },
+    "/drinks/own": {
+      "get": {
+        "tags": ["Drinks"],
+        "summary": "Owner drinks",
+        "description": "Get owner cocktails",
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/OwnDrinksResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/drinks/own/remove/{id}": {
+      "delete": {
+        "tags": ["Drinks"],
+        "summary": "Remove cocktail in owner",
+        "description": "Remove cocktails in owner by id",
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Remove cocktails in owner by id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "examples": ["639b6de9ff77d221f190c53e"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/RemoveOwnByIdResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/drinks/own/add": {
+      "post": {
+        "tags": ["Drinks"],
+        "summary": "Add cocktail to owner",
+        "description": "Add cocktails to owner by id",
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/OwnDrinksResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
     }
   },
 
@@ -1685,6 +1767,105 @@
                 "users": [
                   { "type": "string", "examples": ["65d62d46a55ef251fe5c5a72"] }
                 ]
+              }
+            }
+          }
+        }
+      },
+      "OwnDrinksResponse": {
+        "description": "Successfully get all owner cocktails",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "_id": {
+                  "type": "string",
+                  "description": "Cocktails id",
+                  "examples": ["65db627c945096102f588fb3"]
+                },
+                "file": {
+                  "type": "string"
+                },
+                "drink": {
+                  "type": "string",
+                  "description": "Name cocktails",
+                  "examples": ["Tea"]
+                },
+                "description": {
+                  "type": "string"
+                },
+
+                "category": {
+                  "type": "string",
+                  "examples": ["Cocktail"]
+                },
+                "glass": {
+                  "type": "string",
+                  "examples": ["Coffee mug"]
+                },
+
+                "alcoholic": {
+                  "type": "string"
+                },
+
+                "drinkThumb": {
+                  "type": "string",
+                  "description": "Picture cocktails",
+                  "examples": [
+                    "https://ftp.goit.study/img/drinkify/recipes/Iced_Coffee_Fillip.jpg"
+                  ]
+                },
+                "ingredients": [
+                  {
+                    "title": {
+                      "type": "string",
+                      "examples": ["Kahlua"]
+                    },
+                    "measure": {
+                      "type": "string",
+                      "examples": ["2 tsp"]
+                    },
+                    "_id": {
+                      "type": "string",
+                      "description": "Id ingredients",
+                      "examples": ["65d9f61e4bf8695f1b781226"]
+                    }
+                  }
+                ],
+                "instructions": {
+                  "type": "string"
+                },
+
+                "owner": {
+                  "type": "string",
+                  "description": "Owner  id",
+                  "examples": ["65d9f61e4bf8695f1b781226"]
+                },
+                "createdAt": {
+                  "type": "string",
+                  "examples": ["2024-02-23T20:57:31.787Z"]
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "examples": ["2024-02-23T20:57:31.787Z"]
+                }
+              }
+            }
+          }
+        }
+      },
+      "RemoveOwnByIdResponse": {
+        "description": "Remove cocktails in owner by id",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "examples": ["Cocktail is delete"]
+                }
               }
             }
           }
