@@ -87,11 +87,10 @@ const getOwnDrink = async (req, res) => {
 const removeOwnDrink = async (req, res) => {
 	const { id } = req.params;
 	const { _id: owner } = req.user;
-	const result = await Recipe.findOneAndUpdate(
-		{ _id: id },
-		{ $pull: { users: owner } },
-		{ new: true }
-	);
+	const result = await Recipe.findOneAndDelete({
+		_id: id,
+		users: owner,
+	});
 	if (!result) {
 		throw HttpError(404, "Not found");
 	}
