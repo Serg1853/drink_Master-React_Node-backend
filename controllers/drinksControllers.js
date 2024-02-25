@@ -61,7 +61,10 @@ const findDrinkByFiltrs = async (req, res) => {
     throw HttpError(404, "Not found, try again");
   }
 
-  res.json(result);
+  res.json({
+    result: result,
+    count: resultCount,
+  });
 };
 
 const getById = async (req, res, next) => {
