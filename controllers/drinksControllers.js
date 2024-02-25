@@ -27,27 +27,45 @@ const getAll = async (req, res) => {
 
 const findDrinkByFiltrs = async (req, res) => {
   const { age } = req.user;
-  const { category, ingredient, keyWord } = req.params;
+  const { page = 1, limit = 10 } = req.query;
+  let skip = (page - 1) * limit;
 
-  const { page = 1, limit = 9 } = req.query;
+  const keys = Object.keys(req.query);
+  let paramSearch = {};
+  for (const key of keys) {
+    if (key === "drink" || key === "category" || key === "ingredients.title") {
+      paramSearch = {
+        ...paramSearch,
+        [key]: { $regex: new RegExp(req.query[key], "i") },
+      };
+    }
+  }
+  //   const age = 29;
+  let searchFilters = { ...paramSearch, alcoholic: "Non alcoholic" };
+  if (age > 18) {
+    searchFilters = { ...paramSearch };
+  }
 
-  let query = {};
-  if (age < 18) {
-    query.alcoholic = "Non alcoholic";
-  } else {
-    query.alcoholic = "Alcoholic";
-  }	
-  category && (query.category = category);
+  const resultCount = await Recipe.find(searchFilters).count();
+  if (skip >= resultCount) {
+    if (resultCount < limit) {
+      skip = 0;
+    } else {
+      skip = resultCount - limit;
+    }
+  }
+  console.log("page", page);
+  console.log("limit", limit);
+  console.log("skip", skip);
+  console.log("resultCount", resultCount);
+  console.log("paramSearch", paramSearch);
 
-  ingredient &&
-    (query["ingredients.title"] = { $regex: ingredient, $options: "i" });
+  const result = await Recipe.find(searchFilters, { Recipe }, { skip, limit });
 
-  keyWord && (query.drink = { $regex: keyWord, $options: "i" });
-  keyWord && (query.description = { $regex: keyWord, $options: "i" });
+  if (!result || !result.length) {
+    throw HttpError(404, "Not found, try again");
+  }
 
-  const result = await Recipe.find(query)
-    .limit(limit)
-    .skip((page - 1) * limit);
   res.json(result);
 };
 
