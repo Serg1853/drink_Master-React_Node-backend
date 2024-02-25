@@ -27,7 +27,7 @@ const getAll = async (req, res) => {
 
 const findDrinkByFiltrs = async (req, res) => {
 	const { age } = req.user;
-	const { category, ingredient, keyWord } = req.body;
+	const { category, ingredient, keyWord } = req.params;
 
 	let query = {};
 	if (age < 18) {
@@ -62,7 +62,11 @@ const getById = async (req, res, next) => {
 
 const addOwnDrink = async (req, res) => {
 	const { _id: owner } = req.user;
-	const result = await Recipe.create({ ...req.body, owner });
+	const result = await Recipe.create({
+		...req.body,
+		owner,
+		ingredients: JSON.parse(req.body.ingredients),
+	});
 	res.status(201).json(result);
 };
 
