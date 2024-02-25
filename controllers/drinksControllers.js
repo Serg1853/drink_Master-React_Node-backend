@@ -100,10 +100,11 @@ const getOwnDrink = async (req, res) => {
 const removeOwnDrink = async (req, res) => {
   const { id } = req.params;
   console.log("id", id);
-  const { _id: owner } = req.user;
+	const { _id: owner } = req.user;
+  console.log("owner", owner);
   const result = await Recipe.findOneAndDelete({
     id,
-    users: owner,
+    owner,
   });
   if (!result) {
     throw HttpError(404, "Not found");
