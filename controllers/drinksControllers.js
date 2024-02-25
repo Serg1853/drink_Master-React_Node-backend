@@ -6,36 +6,37 @@ const Ingredient = require("../models/Ingredient");
 const { User } = require("../models/User");
 
 const getAll = async (req, res) => {
+  const { age } = req.user;
 
-	const { age } = req.user;
+  let filter = {};
+  if (age < 18) {
+    filter.alcoholic = "Non alcoholic";
+  } else {
+    filter.alcoholic = "Alcoholic";
+  }
+  // const result = await Recipe.find(filter);
 
-	let filter = {};
-	if (age < 18) {
-		filter.alcoholic = "Non alcoholic";
-	} else {
-		filter.alcoholic = "Alcoholic";
-	}
-	// const result = await Recipe.find(filter);
+  const limit = 200;
+  const result = await Recipe.aggregate([
+    { $match: filter },
+    { $sample: { size: limit } },
+  ]);
 
-	const limit = 200;
-	const result = await Recipe.aggregate([
-		{ $match: filter },
-		{ $sample: { size: limit } },
-	]);
-
-	res.json(result);
+  res.json(result);
 };
 
 const findDrinkByFiltrs = async (req, res) => {
   const { age } = req.user;
   const { category, ingredient, keyWord } = req.params;
 
+  const { page = 1, limit = 9 } = req.query;
+
   let query = {};
   if (age < 18) {
     query.alcoholic = "Non alcoholic";
   } else {
     query.alcoholic = "Alcoholic";
-  }
+  }	
   category && (query.category = category);
 
   ingredient &&
@@ -44,7 +45,9 @@ const findDrinkByFiltrs = async (req, res) => {
   keyWord && (query.drink = { $regex: keyWord, $options: "i" });
   keyWord && (query.description = { $regex: keyWord, $options: "i" });
 
-  const result = await Recipe.find(query);
+  const result = await Recipe.find(query)
+    .limit(limit)
+    .skip((page - 1) * limit);
   res.json(result);
 };
 
