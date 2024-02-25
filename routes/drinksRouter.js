@@ -30,7 +30,7 @@ drinksRouter.post(
 	addOwnDrink
 );
 
-drinksRouter.delete("/own/remove", authenticate, removeOwnDrink);
+drinksRouter.delete("/own/remove/:id", authenticate, removeOwnDrink);
 
 drinksRouter.get("/own", authenticate, getOwnDrink);
 
