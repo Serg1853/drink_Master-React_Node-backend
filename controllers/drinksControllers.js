@@ -16,7 +16,7 @@ const getAll = async (req, res) => {
 	}
 	// const result = await Recipe.find(filter);
 
-	const limit = 150;
+	const limit = 200;
 	const result = await Recipe.aggregate([
 		{ $match: filter },
 		{ $sample: { size: limit } },
