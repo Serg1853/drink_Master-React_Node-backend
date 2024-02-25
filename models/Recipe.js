@@ -35,11 +35,6 @@ const drinkSchema = new Schema(
             type: String,
             required: true,
           },
-          ingredientId: {
-            type: Schema.Types.ObjectId,
-            required: true,
-            ref: "ingredient",
-          },
         },
       ],
       required: true,
