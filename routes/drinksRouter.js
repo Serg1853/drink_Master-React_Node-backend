@@ -2,10 +2,11 @@ const express = require("express");
 const drinksRouter = express.Router();
 const {
 	isEmptyBody,
+	validateBody,
 	authenticate,
 	uploadDrinkImage,
 } = require("../middlewares");
-// const addDrinkSchema = require("../schemas/addDrinkSchema");
+const addDrinkSchema = require("../schemas/addDrinkSchema");
 
 const {
 	getAll,
@@ -30,6 +31,7 @@ drinksRouter.post(
 	"/own/add",
 	authenticate,
 	uploadDrinkImage.single("drinKThumb"),
+	validateBody(addDrinkSchema),
 	addOwnDrink
 );
 
