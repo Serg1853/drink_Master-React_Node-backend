@@ -3,7 +3,6 @@ const handleMongooseError = require("../helpers/handleMongooseError");
 
 const drinkSchema = new Schema(
 	{
-		file: String,
 		drink: {
 			type: String,
 			required: true,
@@ -21,6 +20,10 @@ const drinkSchema = new Schema(
 			required: true,
 		},
 		alcoholic: {
+			type: String,
+			required: true,
+		},
+		drinkThumb: {
 			type: String,
 			required: true,
 		},
