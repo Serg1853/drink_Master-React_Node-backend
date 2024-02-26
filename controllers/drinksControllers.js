@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
-const { nanoid } = "@reduxjs/toolkit";
+const path = require("path");
+const { nanoid } = require("@reduxjs/toolkit");
 const cloudinary = require("cloudinary").v2;
 const { ctrlWrapper, HttpError } = require("../helpers");
 const Recipe = require("../models/Recipe");
@@ -89,7 +90,7 @@ const addOwnDrink = async (req, res, next) => {
 
 	const resultfromCloud = await cloudinary.uploader.upload(file.path, {
 		public_id: `${fileName}`,
-		folder: "cocktail",
+		folder: "drink",
 		use_filename: true,
 		unique_filename: false,
 		overwrite: true,
