@@ -22,6 +22,8 @@ app.use("/filters", filtersRouter);
 app.use("/drinks", drinksRouter);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
+
+
 app.use((req, res) => {
 	res.status(404).json({ message: "Route not found" });
 });
