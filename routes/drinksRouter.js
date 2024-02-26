@@ -3,7 +3,7 @@ const drinksRouter = express.Router();
 const {
 	isEmptyBody,
 	authenticate,
-	uploadDrinkImage, // Вот здесь происходит импорт middleware
+	uploadDrinkImage,
 } = require("../middlewares");
 // const addDrinkSchema = require("../schemas/addDrinkSchema");
 
