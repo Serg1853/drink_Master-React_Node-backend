@@ -581,17 +581,29 @@
     "/drinks/own/add": {
       "post": {
         "tags": ["Drinks"],
-        "summary": "Add cocktail to owner",
-        "description": "Add cocktails to owner by id",
-        "security": [
-          {
-            "Bearer": []
+        "summary": "Add new user's drink recipe",
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "User's recipe object",
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/AddOwnDrinkRequest"
+              }
+            }
           }
-        ],
-
+        },
         "responses": {
-          "200": {
-            "$ref": "#/components/responses/OwnDrinksResponse"
+          "201": {
+            "description": "Drink is successfully added",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddOwnDrinkResponse"
+                }
+              }
+            }
           },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
@@ -1822,7 +1834,7 @@
       "UpdateUserRequest": {
         "type": "object",
         "properties": {
-          "avatar": {
+          "avatarURL": {
             "type": "string",
             "format": "binary"
           },
@@ -1833,6 +1845,175 @@
         "example": {
           "avatar": "//www.gravatar.com/avatar/97d3723787b96f4804a076d9d009dfdf",
           "name": "Vlad"
+        }
+      },
+      "AddOwnDrinkRequest": {
+        "type": "object",
+        "properties": {
+          "drink": {
+            "type": "string",
+            "example": "PainKiller"
+          },
+          "description": {
+            "type": "string",
+            "example": "Just drink it"
+          },
+          "alcoholic": {
+            "type": "string",
+            "enum": ["Alcoholic", "Non alcoholic"]
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "Ordinary Drink",
+              "Cocktail",
+              "Shake",
+              "Other/Unknown",
+              "Cocoa",
+              "Shot",
+              "Coffee / Tea",
+              "Homemade Liqueur",
+              "Punch / Party Drink",
+              "Beer",
+              "Soft Drink"
+            ]
+          },
+          "glass": {
+            "type": "string",
+            "enum": [
+              "Highball glass",
+              "Cocktail glass",
+              "Old-fashioned glass",
+              "Whiskey Glass",
+              "Collins glass",
+              "Pousse cafe glass",
+              "Champagne flute",
+              "Whiskey sour glass",
+              "Cordial glass",
+              "Brandy snifter",
+              "White wine glass",
+              "Nick and Nora Glass",
+              "Hurricane glass",
+              "Coffee mug",
+              "Shot glass"
+            ]
+          },
+          "instructions": {
+            "type": "string",
+            "example": "All you need is glass"
+          },
+          "drinkThumb": {
+            "type": "string",
+            "format": "binary"
+          },
+          "ingredients[0][title]": {
+            "type": "string",
+            "example": "Beer"
+          },
+          "ingredients[0][measure]": {
+            "type": "string",
+            "example": "2 cl"
+          },
+          "ingredients[0][ingredientId]": {
+            "type": "string",
+            "example": "639b6de9ff77d221f190c520"
+          }
+        },
+        "example": {
+          "drink": "PainKiller v5",
+          "category": "Soft Drink",
+          "alcoholic": "Alcoholic",
+          "glass": "Beer Glass",
+          "description": "Just drink it",
+          "instructions": "All you need is glass",
+          "drinkThumb": "https://res.cloudinary.com/dzvvgvwgt/image/upload/v1698700062/drink/34k4kk323dsd9.jpg",
+          "ingredients[0][title]": "Beer",
+          "ingredients[0][measure]": "2 cl",
+          "ingredients[0][ingredientId]": "64f1d5c169d8333cf130fb4a"
+        }
+      },
+      "AddOwnDrinkResponse": {
+        "type": "object",
+        "properties": {
+          "drink": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "alcoholic": {
+            "type": "string",
+            "description": "Alcoholic / Non alcoholic"
+          },
+          "glass": {
+            "type": "string",
+            "description": "Type of glass the drink should be served in"
+          },
+          "description": {
+            "type": "string",
+            "description": "Drink description"
+          },
+          "drinkThumb": {
+            "type": "string",
+            "description": "Drink image url"
+          },
+          "ingredients": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "measure": {
+                  "type": "string"
+                },
+                "ingredientId": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "owner": {
+            "type": "string"
+          },
+          "favorite": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "_id": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "drink": "Cocktail#13",
+          "category": "Soft Drink",
+          "alcoholic": "Alcoholic",
+          "glass": "Beer Glass",
+          "description": "Cocktail#13",
+          "drinkThumb": "https://res.cloudinary.com/dzvvgvwgt/image/upload/v1698700062/drink/shutterstock.jpg.jpg",
+          "ingredients": [
+            {
+              "title": "Tequila1",
+              "measure": "2 cl",
+              "ingredientId": "64aebb7f82d96cc69e0eb4b8"
+            },
+            {
+              "title": "Beer",
+              "measure": "2 cl ",
+              "ingredientId": "64f1d5c169d8333cf130fb4a"
+            },
+            {
+              "title": "Vodka",
+              "measure": "3 cl",
+              "ingredientId": "64aebb7f82d96cc69e0eb4b9"
+            }
+          ],
+          "owner": "654567fe985e7dfc0b25c2b8",
+          "favorite": [],
+          "_id": "6546a9e5be2bad087d921b27"
         }
       },
       "SearchDrinksResponse": {
@@ -2420,6 +2601,38 @@
             }
           ],
           "count": 468
+        }
+      },
+      "UpdateUserResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "user": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string",
+                "format": "email"
+              },
+              "avatar": {
+                "type": "string",
+                "format": "uri"
+              }
+            }
+          }
+        },
+        "example": {
+          "message": "Avatar uploaded successfully",
+          "user": {
+            "name": "Vlad",
+            "email": "vlad@example.com",
+            "avatar": "https://res.cloudinary.com/dcnegu5lo/image/upload/v1708980354/avatars/LvWW39Yg6Q0rhGveHqCNA.jpg.jpg"
+          }
         }
       }
     },
