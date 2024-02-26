@@ -1,7 +1,11 @@
 const express = require("express");
 const drinksRouter = express.Router();
-const { validateBody, isEmptyBody, authenticate } = require("../middlewares");
-const addDrinkSchema = require("../schemas/addDrinkSchema");
+const {
+	isEmptyBody,
+	authenticate,
+	uploadDrinkImage, // Вот здесь происходит импорт middleware
+} = require("../middlewares");
+// const addDrinkSchema = require("../schemas/addDrinkSchema");
 
 const {
 	getAll,
@@ -26,7 +30,7 @@ drinksRouter.post(
 	"/own/add",
 	isEmptyBody,
 	authenticate,
-	validateBody(addDrinkSchema),
+	uploadDrinkImage.single("drinKThumb"),
 	addOwnDrink
 );
 
