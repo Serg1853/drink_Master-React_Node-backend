@@ -116,10 +116,6 @@ const updateUser = async (req, res) => {
     { new: true }
   );
 
-  if (!updatedUser) {
-    return res.status(404).json({ message: "User not found" });
-  }
-
   res.json({
     message: "Avatar uploaded successfully",
     user: {
