@@ -49,9 +49,9 @@ const addDrinkSchema = Joi.object({
 	instructions: Joi.string()
 		.required()
 		.messages({ "any.required": "missing required instruction field" }),
-	drinkThumb: Joi.string()
-		.required()
-		.messages({ "any.required": "You must to add image" }),
+	drinkThumb: Joi.string().messages({
+		"any.required": "You must to add image",
+	}),
 });
 
 module.exports = addDrinkSchema;
