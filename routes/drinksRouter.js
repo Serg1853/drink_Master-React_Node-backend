@@ -28,7 +28,6 @@ drinksRouter.get("/search", authenticate, findDrinkByFiltrs);
 
 drinksRouter.post(
 	"/own/add",
-	isEmptyBody,
 	authenticate,
 	uploadDrinkImage.single("drinKThumb"),
 	addOwnDrink
