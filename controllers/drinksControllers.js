@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const path = require("path");
 const { nanoid } = require("@reduxjs/toolkit");
 const cloudinary = require("cloudinary").v2;
 const { ctrlWrapper, HttpError } = require("../helpers");
