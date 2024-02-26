@@ -84,18 +84,13 @@ const signoutUser = async (req, res) => {
   res.status(204).json();
 };
 
-const updateUser = async (req, res) => {
-  const { _id, name } = req.user;
-  const newName = req.body.name;
-  await User.findByIdAndUpdate(_id, { name: newName }, { new: true });
-  res.json({ name });
-};
 
-const updateUserAvatar = async (req, res) => {
-  if (!req.file) {
+const updateUser = async (req, res) => {
+  const { body, file, user } = req;
+  console.log('file', file)
+  if (!file) {
     throw HttpError(400, "Avatar must be provided");
   }
-  const { _id } = req.user;
   const { path: tempUpload, originalname } = req.file;
   await Jimp.read(tempUpload)
     .then((avatar) => {
@@ -107,14 +102,25 @@ const updateUserAvatar = async (req, res) => {
     .catch((err) => {
       throw err;
     });
+    const { _id } = user;
   const filename = `${_id}_${originalname}`;
   const resultUpload = path.resolve("public", "avatars", filename);
   await fs.rename(tempUpload, resultUpload);
   const avatarURL = path.join("avatars", filename);
+  const updateUser = await User.findByIdAndUpdate(
+    _id,
+    { $set: { name: body.name, avatarURL: avatarURL } },
+    { new: true }
+  );
 
-  await User.findByIdAndUpdate(_id, { avatarURL });
-
-  res.json({ avatarURL });
+  res.json({
+    message: "Avatar is update",
+    user: {
+      name: updateUser.name,
+      email: updateUser.email,
+      avatarURL: updateUser.avatarURL,
+    },
+  });
 };
 
 const updateSubscription = async (req, res) => {
@@ -132,7 +138,7 @@ module.exports = {
   signinUser: ctrlWrapper(signinUser),
   updateUser: ctrlWrapper(updateUser),
   updateSubscription: ctrlWrapper(updateSubscription),
-  updateUserAvatar: ctrlWrapper(updateUserAvatar),
+  // updateUserAvatar: ctrlWrapper(updateUserAvatar),
   signoutUser: ctrlWrapper(signoutUser),
   getCurrent: ctrlWrapper(getCurrent),
 };

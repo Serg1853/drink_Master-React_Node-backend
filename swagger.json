@@ -137,87 +137,51 @@
         }
       }
     },
-    "/users/update/name": {
+    "/users/update": {
       "patch": {
         "tags": ["Users"],
-        "summary": "Add or update user name",
-        "description": "Add or update user name",
+        "summary": "User update",
+        "consumes": ["multipart/form-data"],
+        "security": [{ "Bearer": [] }],
+        "parameters": [],
         "requestBody": {
-          "description": "Update user name",
+          "description": "Update object",
+          "required": true,
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/UserUpdateName"
+                "$ref": "#/components/schemas/UpdateUserRequest"
               }
             }
           }
         },
-        "security": [
-          {
-            "Bearer": []
-          }
-        ],
-
         "responses": {
           "200": {
-            "$ref": "#/components/responses/UserResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/BadRequest"
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          },
-          "500": {
-            "$ref": "#/components/responses/ServerError"
-          }
-        }
-      }
-    },
-    "/users/update/avatar": {
-      "patch": {
-        "tags": ["Users"],
-        "summary": "Add or update user avatar",
-        "description": "Add or update user avatar",
-        "security": [
-          {
-            "Bearer": []
-          }
-        ],
-        "requestBody": {
-          "description": "User avatar image",
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "avatarURL": {
-                    "type": "string",
-                    "format": "binary",
-                    "description": "User's avatar image file"
-                  }
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateUserResponse"
                 }
               }
             }
           },
-          "required": false
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/AvatarsResponse"
-          },
           "400": {
-            "$ref": "#/components/responses/BadRequest"
+            "description": "Bad Request"
           },
           "401": {
-            "$ref": "#/components/responses/Unauthorized"
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not found"
           },
           "500": {
-            "$ref": "#/components/responses/ServerError"
+            "description": "Server error"
           }
         }
       }
     },
+
     "/filters/categories": {
       "get": {
         "tags": ["Filters"],
@@ -297,6 +261,7 @@
             "Bearer": []
           }
         ],
+
         "responses": {
           "200": {
             "$ref": "#/components/responses/DrinksAllResponse"
@@ -338,25 +303,82 @@
         "tags": ["Drinks"],
         "summary": "Drinks search",
         "description": "Search cocktail by params",
-        "requestBody": {
-          "description": "Search object",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SearchRequest"
-              }
-            }
-          },
-          "required": true
-        },
         "security": [
           {
             "Bearer": []
           }
         ],
+        "parameters": [
+          {
+            "in": "query",
+            "type": "integer",
+            "name": "page",
+            "description": "Page number, default 1"
+          },
+          {
+            "in": "query",
+            "type": "integer",
+            "name": "per_page",
+            "description": "Limit items per page, default 10"
+          },
+          {
+            "in": "query",
+            "name": "search",
+            "type": "string",
+            "description": "Search drinks by name"
+          },
+          {
+            "in": "query",
+            "name": "category",
+            "description": "Search drinks by category",
+            "type": "string",
+            "schema": {
+              "enum": [
+                "Ordinary Drink",
+                "Cocktail",
+                "Shake",
+                "Other/Unknown",
+                "Cocoa",
+                "Shot",
+                "Coffee / Tea",
+                "Homemade Liqueur",
+                "Punch / Party Drink",
+                "Beer",
+                "Soft Drink"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "ingredient",
+            "description": "Search drinks by ingredients",
+            "type": "string",
+            "schema": {
+              "enum": [
+                "7-Up",
+                "Agave Syrup",
+                "Allspice",
+                "Almond flavoring",
+                "Light rum",
+                "Lemon",
+                "Tomato juice",
+                "Yoghurt",
+                "Sugar",
+                "Milk"
+              ]
+            }
+          }
+        ],
         "responses": {
-          "201": {
-            "$ref": "#/components/responses/SearchResponse"
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchDrinksResponse"
+                }
+              }
+            }
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
@@ -735,36 +757,7 @@
           }
         }
       },
-      "UserResponse": {
-        "description": "The user's name is updated",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/UserUpdateName"
-            }
-          }
-        }
-      },
-      "AvatarsResponse": {
-        "description": "The user's avatar is updated",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "description": "User avatar file",
-              "properties": {
-                "avatarURL": {
-                  "type": "string",
-                  "description": "User avatar path",
-                  "examples": [
-                    "//www.gravatar.com/avatar/97d3723787b96f4804a076d9d009dfdf"
-                  ]
-                }
-              }
-            }
-          }
-        }
-      },
+
       "CategoriesResponse": {
         "description": "Successfully get categories",
         "content": {
@@ -1010,159 +1003,7 @@
           }
         }
       },
-      "SearchResponse": {
-        "description": "Successfully get all cocktails",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "_id": {
-                  "type": "string",
-                  "description": "Cocktails id",
-                  "examples": ["639b6de9ff77d221f190c51b"]
-                },
-                "drink": {
-                  "type": "string",
-                  "description": "Name cocktails",
-                  "examples": ["Adam"]
-                },
-                "drinkAlternate": {
-                  "type": "string"
-                },
-                "tags": {
-                  "type": "string",
-                  "examples": ["Alcoholic,Holiday"]
-                },
-                "video": {
-                  "type": "string",
-                  "examples": ["Sorry, not specified"]
-                },
-                "category": {
-                  "type": "string",
-                  "examples": ["Ordinary Drink"]
-                },
-                "IBA": {
-                  "type": "string"
-                },
-                "alcoholic": {
-                  "type": "string"
-                },
-                "glass": {
-                  "type": "string",
-                  "examples": ["Cocktail glass"]
-                },
-                "description": {
-                  "type": "string"
-                },
-                "instructions": {
-                  "type": "string"
-                },
-                "instructionsES": {
-                  "type": "string"
-                },
-                "instructionsDE": {
-                  "type": "string"
-                },
-                "instructionsFR": {
-                  "type": "string"
-                },
-                "instructionsIT": {
-                  "type": "string"
-                },
-                "instructionsRU": {
-                  "type": "string"
-                },
-                "instructionsPL": {
-                  "type": "string"
-                },
-                "instructionsUK": {
-                  "type": "string"
-                },
-                "drinkThumb": {
-                  "type": "string",
-                  "description": "Picture cocktails",
-                  "examples": [
-                    "https://ftp.goit.study/img/drinkify/recipes/Adam.jpg"
-                  ]
-                },
-                "ingredients": [
-                  {
-                    "_id": {
-                      "type": "string",
-                      "description": "Id ingredients",
-                      "examples": ["65db0b021aefaf3f0436199e"]
-                    },
-                    "title": {
-                      "type": "string",
-                      "examples": ["Dark rum"]
-                    },
-                    "measure": {
-                      "type": "string",
-                      "examples": ["2 oz"]
-                    },
-                    "ingredientId": {
-                      "type": "string",
-                      "description": "Id ingredients",
-                      "examples": ["64aebb7f82d96cc69e0eb4a7"]
-                    }
-                  },
-                  {
-                    "_id": {
-                      "type": "string",
-                      "description": "Id ingredients",
-                      "examples": ["65db0b021aefaf3f0436199f"]
-                    },
-                    "title": {
-                      "type": "string",
-                      "examples": ["Lemon juice"]
-                    },
-                    "measure": {
-                      "type": "string",
-                      "examples": ["1 oz"]
-                    },
-                    "ingredientId": {
-                      "type": "string",
-                      "description": "Id ingredients",
-                      "examples": ["64aebb7f82d96cc69e0eb4d3"]
-                    }
-                  },
-                  {
-                    "_id": {
-                      "type": "string",
-                      "description": "Id ingredients",
-                      "examples": ["65db0b021aefaf3f043619a0"]
-                    },
-                    "title": {
-                      "type": "string",
-                      "examples": ["Grenadine"]
-                    },
-                    "measure": {
-                      "type": "string",
-                      "examples": ["1 tsp"]
-                    },
-                    "ingredientId": {
-                      "type": "string",
-                      "description": "Id ingredients",
-                      "examples": ["64aebb7f82d96cc69e0eb4c7"]
-                    }
-                  }
-                ],
-                "shortDescription": {
-                  "type": "string"
-                },
-                "updatedAt": {
-                  "type": "string",
-                  "examples": ["2024-02-25T09:14:23.904Z"]
-                },
-                "users": [
-                  { "type": "string", "examples": ["65d62d46a55ef251fe5c5a72"] }
-                ]
-              }
-            }
-          }
-        }
-      },
+
       "PopularDrinksResponse": {
         "description": "Successfully get all cocktails",
         "content": {
@@ -1870,6 +1711,38 @@
             }
           }
         }
+      },
+      "UpdateUserResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "user": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string",
+                "format": "email"
+              },
+              "avatar": {
+                "type": "string",
+                "format": "uri"
+              }
+            }
+          }
+        },
+        "example": {
+          "message": "Avatar uploaded successfully",
+          "user": {
+            "name": "Vlad",
+            "email": "max@example.com",
+            "avatar": "//www.gravatar.com/avatar/97d3723787b96f4804a076d9d009dfdf"
+          }
+        }
       }
     },
 
@@ -1946,33 +1819,607 @@
           }
         }
       },
-      "UserUpdateName": {
+      "UpdateUserRequest": {
         "type": "object",
         "properties": {
-          "name": {
+          "avatar": {
             "type": "string",
-            "minLength": 2,
-            "maxLength": 32,
-            "examples": ["Vlad"]
+            "format": "binary"
+          },
+          "name": {
+            "type": "string"
           }
+        },
+        "example": {
+          "avatar": "//www.gravatar.com/avatar/97d3723787b96f4804a076d9d009dfdf",
+          "name": "Vlad"
         }
       },
-      "SearchRequest": {
+      "SearchDrinksResponse": {
         "type": "object",
-        "required": ["category", "ingredient", "keyWord"],
         "properties": {
-          "category": {
-            "type": "string",
-            "examples": ["Ordinary Drink"]
+          "paginatedResult": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "_id": {
+                  "type": "string"
+                },
+                "drink": {
+                  "type": "string"
+                },
+                "drinkAlternate": {
+                  "type": "string"
+                },
+                "tags": {
+                  "type": "string"
+                },
+                "video": {
+                  "type": "string"
+                },
+                "category": {
+                  "type": "string"
+                },
+                "IBA": {
+                  "type": "string"
+                },
+                "alcoholic": {
+                  "type": "string"
+                },
+                "glass": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "instructions": {
+                  "type": "string"
+                },
+                "instructionsES": {
+                  "type": "string"
+                },
+                "instructionsDE": {
+                  "type": "string"
+                },
+                "instructionsFR": {
+                  "type": "string"
+                },
+                "instructionsIT": {
+                  "type": "string"
+                },
+                "instructionsRU": {
+                  "type": "string"
+                },
+                "instructionsPL": {
+                  "type": "string"
+                },
+                "instructionsUK": {
+                  "type": "string"
+                },
+                "drinkThumb": {
+                  "type": "string"
+                },
+                "ingredients": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "title": {
+                        "type": "string"
+                      },
+                      "measure": {
+                        "type": "string"
+                      },
+                      "ingredientId": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "shortDescription": {
+                  "type": "string"
+                },
+                "owner": {
+                  "type": "string"
+                },
+                "favorite": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "updatedAt": {
+                  "type": "string"
+                }
+              }
+            }
           },
-          "ingredient": {
-            "type": "string",
-            "examples": ["Dark rum"]
-          },
-          "keyWord": {
-            "type": "string",
-            "examples": ["a"]
-          }
+          "totalCount": { "type": "integer" }
+        },
+        "example": {
+          "result": [
+            {
+              "_id": "639b6de9ff77d221f190c50d",
+              "drink": "Iced Coffee Fillip",
+              "drinkAlternate": "Sorry, not specified",
+              "tags": "Coffee / Tea,IBA,NewEra",
+              "video": "https://youtu.be/3E__KEFweRI?si=nkzSORYlM6OBHJj7",
+              "category": "Coffee / Tea",
+              "IBA": "Sorry, not specified",
+              "alcoholic": "Alcoholic",
+              "glass": "Coffee mug",
+              "description": "Iced Coffee Fillip is a cool and creamy beverage that combines the flavors of iced coffee, vanilla syrup, and chocolate sauce. It is made by blending ice, coffee, milk, vanilla syrup, and chocolate sauce together until smooth. The result is a refreshing and indulgent drink that is perfect for a hot summer day or as a pick-me-up in the afternoon.",
+              "instructions": "Mix together in a coffee mug and chill before serving.",
+              "instructionsES": "Mezclar en una taza de café y enfriar antes de servir.",
+              "instructionsDE": "In einer Kaffeetasse vermischen und vor dem Servieren kalt stellen.",
+              "instructionsFR": "Mélanger dans une tasse à café et réfrigérer avant de servir.",
+              "instructionsIT": "Mescolare insieme in una tazza da caffè e raffreddare prima di servire.",
+              "instructionsRU": "Смешайте в кофейной кружке и охладите перед подачей на стол.",
+              "instructionsPL": "Wymieszać w kubku do kawy i schłodzić przed podaniem.",
+              "instructionsUK": "Змішайте в чашці для кави та охолодіть перед подачею.",
+              "drinkThumb": "https://ftp.goit.study/img/drinkify/recipes/Iced_Coffee_Fillip.jpg",
+              "ingredients": [
+                {
+                  "_id": "65dcba2baaf7538be6b23934",
+                  "title": "Kahlua",
+                  "measure": "2 tsp ",
+                  "ingredientId": "64aebb7f82d96cc69e0eb4bd"
+                },
+                {
+                  "_id": "65dcba2baaf7538be6b23935",
+                  "title": "Coffee",
+                  "measure": "Strong cold ",
+                  "ingredientId": "64aebb7f82d96cc69e0eb4e7"
+                }
+              ],
+              "shortDescription": "A cool and creamy iced coffee with a touch of vanilla and chocolate.",
+              "updatedAt": "2024-02-26T12:20:48.506Z",
+              "users": [
+                "65d62d46a55ef251fe5c5a72",
+                "65d62d46a55ef251fe5c5a72",
+                "65d7206402c5a12287b7a654",
+                "65d7548b76e8af18b413fc1f",
+                "65d4eea67a36310309c63a19",
+                "65d7823ec3e4b9742feefef6",
+                "65d7abd58b1ceacb15c2349d",
+                "65dba8e8c3778288b10f2420"
+              ]
+            },
+            {
+              "_id": "639b6de9ff77d221f190c520",
+              "drink": "Avalon",
+              "drinkAlternate": "Sorry, not specified",
+              "tags": "OrdinaryDrink,Alcoholic",
+              "video": "https://youtu.be/lxwWmXIuqrI?si=SOOIxhBhjV4eERs9",
+              "category": "Ordinary Drink",
+              "IBA": "Sorry, not specified",
+              "alcoholic": "Alcoholic",
+              "glass": "Highball glass",
+              "description": "Avalon is a tropical and fruity cocktail that transports you to a sunny beach with its blend of rum and tropical fruit juices. It is made with white rum, pineapple juice, orange juice, and a splash of grenadine. The result is a vibrant and refreshing drink that captures the essence of paradise. Sit back, relax, and enjoy the taste of the tropics.",
+              "instructions": "Fill a tall glass with ice. Layer the Finlandia Vodka, lemon and apple juices, Pisang Ambon, and top up with lemonade. Stir slightly and garnish with a spiralled cucumber skin and a red cherry. The cucumber provides zest and looks attractive. This drink, created by Timo Haimi, took first prize in the 1991 Finlandia Vodka Long Drink Competition.",
+              "instructionsES": "Llena un vaso alto con hielo. Agregue el vodka, los jugos de limón y manzana, el licor de plátano Pisang Ambon y complete con limonada. Revuelva ligeramente y adorne con una cáscara de pepino en espiral y una cereza roja. El pepino proporciona entusiasmo y se ve atractivo. Esta bebida, creada por Timo Haimi, ganó el primer premio en el Concurso de Tragos Largos de Vodka de Finlandia de 1991.",
+              "instructionsDE": "Füllen Sie ein hohes Glas mit Eis. Legen Sie den Finlandia Wodka, Zitronen- und Apfelsäfte, Pisang Ambon und geben Sie Limonade dazu. Leicht umrühren und mit einer spiralförmigen Gurkenhaut und einer roten Kirsche garnieren. Die Gurke sorgt für Schärfe und sieht attraktiv aus. Dieses von Timo Haimi kreierte Getränk erhielt 1991 den ersten Preis beim Finlandia Wodka Long Drink Wettbewerb.",
+              "instructionsFR": "Remplissez un grand verre de glace. Superposez la vodka Finlandia, les jus de citron et de pomme, le Pisang Ambon et complétez avec de la limonade. Remuer légèrement et garnir d'une peau de concombre en spirale et d'une cerise rouge. Le concombre donne du zeste et a l'air attrayant. Cette boisson, créée par Timo Haimi, a remporté le premier prix du concours Finlandia Vodka Long Drink en 1991.",
+              "instructionsIT": "Riempi un bicchiere alto di ghiaccio.\r\nVersare la Vodka, succhi di limone, mela, Pisang Ambon o un liquore alla banana e completare con la limonata.\r\nMescolare leggermente e guarnire con una buccia di cetriolo a spirale e una ciliegia rossa.\r\nIl cetriolo fornisce la scorza e sembra attraente.\r\nQuesta bevanda, creata da Timo Haimi, ha vinto il primo premio nel 1991 Finlandia Vodka Long Drink Competition.",
+              "instructionsRU": "Наполните высокий стакан льдом. Налейте водку Finlandia, лимонный и яблочный соки, писанг амбон и долейте лимонад. Слегка перемешайте и украсьте свернутой спиралью кожурой огурца и красной вишней. Огурец дает изюминку и выглядит привлекательно. Этот напиток, созданный Тимо Хайми, занял первое место на конкурсе лонгдринков Finlandia Vodka в 1991 году.",
+              "instructionsPL": "Napełnij wysoką szklankę lodem. Pokryj wódką Finlandia, sokiem z cytryny i jabłka, Pisang Ambon i dopełnij lemoniadą. Delikatnie wymieszaj i udekoruj spiralną skórką ogórka i czerwoną wiśnią. Ogórek dodaje skórki i atrakcyjnie wygląda. Stworzony przez Timo Haimiego napój zdobył pierwszą nagrodę w konkursie Finlandia Vodka Long Drink w 1991 roku.",
+              "instructionsUK": "Наповніть високий стакан льодом. Покладіть горілку Finlandia, лимонний і яблучний соки, пісанг-амбон і залийте лимонадом. Трохи перемішайте та прикрасьте шкіркою огірка зі спіралькою та червоною вишнею. Огірок надає родзинку і виглядає привабливо. Цей напій, створений Тімо Хаімі, зайняв першу премію на конкурсі Finlandia Vodka Long Drink Competition у 1991 році.",
+              "drinkThumb": "https://ftp.goit.study/img/drinkify/recipes/Avalon.jpg",
+              "ingredients": [
+                {
+                  "_id": "65dcba2baaf7538be6b23936",
+                  "title": "Vodka",
+                  "measure": "3 parts",
+                  "ingredientId": "64aebb7f82d96cc69e0eb4b9"
+                },
+                {
+                  "_id": "65dcba2baaf7538be6b23937",
+                  "title": "Pisang Ambon",
+                  "measure": "1 part ",
+                  "ingredientId": "64f1d5c169d8333cf130fb44"
+                },
+                {
+                  "_id": "65dcba2baaf7538be6b23938",
+                  "title": "Apple juice",
+                  "measure": "6 parts ",
+                  "ingredientId": "64aebb7f82d96cc69e0eb4d1"
+                },
+                {
+                  "_id": "65dcba2baaf7538be6b23939",
+                  "title": "Lemon juice",
+                  "measure": "1 1/2 part ",
+                  "ingredientId": "64aebb7f82d96cc69e0eb4d3"
+                },
+                {
+                  "_id": "65dcba2baaf7538be6b2393a",
+                  "title": "Lemonade",
+                  "ingredientId": "64aebb7f82d96cc69e0eb4f8"
+                }
+              ],
+              "shortDescription": "A tropical and fruity cocktail with a blend of rum and tropical fruit juices.",
+              "updatedAt": "2024-02-26T13:16:55.988Z",
+              "users": [
+                "65d62d46a55ef251fe5c5a72",
+                "65d62d46a55ef251fe5c5a72",
+                "65d7823ec3e4b9742feefef6",
+                "65d7823ec3e4b9742feefef6",
+                "65dba8e8c3778288b10f2420"
+              ]
+            },
+            {
+              "_id": "639b6de9ff77d221f190c549",
+              "drink": "Porto flip",
+              "drinkAlternate": "Sorry, not specified",
+              "tags": "IBA,Classic",
+              "video": "https://www.youtube.com/watch?v=2jtoa_t7g94",
+              "category": "Ordinary Drink",
+              "IBA": "Unforgettables",
+              "alcoholic": "Alcoholic",
+              "glass": "Cocktail glass",
+              "description": "Porto flip is a rich and creamy cocktail that combines the flavors of port wine, brandy, and an egg yolk. It is made by shaking port wine, brandy, simple syrup, and an egg yolk together with ice. The result is a velvety smooth drink with a hint of sweetness and a touch of richness from the egg yolk. It's a sophisticated and indulgent choice for a special occasion.",
+              "instructions": "Shake ingredients together in a mixer with ice. Strain into glass, garnish and serve.",
+              "instructionsES": "Agite los ingredientes en una batidora con hielo. Colar en un vaso, decorar y servir.",
+              "instructionsDE": "Die Zutaten in einem Mixer mit Eis verrühren. In ein Glas abseihen, garnieren und servieren.",
+              "instructionsFR": "Secouer les ingrédients ensemble dans un mélangeur avec de la glace. Passer dans un verre, décorer et servir.",
+              "instructionsIT": "Shakerare gli ingredienti insieme in un mixer con ghiaccio.\r\nFiltrare nel bicchiere, guarnire e servire.",
+              "instructionsRU": "Взбить ингредиенты в миксере со льдом. Процедите в стакан, украсьте и подавайте.",
+              "instructionsPL": "Wymieszaj składniki w mikserze z lodem. Odcedź do szklanki, udekoruj i podawaj.",
+              "instructionsUK": "Збовтайте інгредієнти в міксері з льодом. Процідіть у склянку, прикрасьте та подавайте.",
+              "drinkThumb": "https://ftp.goit.study/img/drinkify/recipes/Porto_flip.jpg",
+              "ingredients": [
+                {
+                  "_id": "65dcba2baaf7538be6b2393b",
+                  "title": "Brandy",
+                  "measure": "3 parts",
+                  "ingredientId": "64aebb7f82d96cc69e0eb4af"
+                },
+                {
+                  "_id": "65dcba2baaf7538be6b2393c",
+                  "title": "Port",
+                  "measure": "9 parts",
+                  "ingredientId": "64aebb7f82d96cc69e0eb4c8"
+                },
+                {
+                  "_id": "65dcba2baaf7538be6b2393d",
+                  "title": "Egg Yolk",
+                  "measure": "2 parts",
+                  "ingredientId": "64aebb7f82d96cc69e0eb4f2"
+                }
+              ],
+              "shortDescription": "A rich and creamy cocktail with port wine, brandy, and an egg yolk.",
+              "updatedAt": "2024-02-23T18:17:23.842Z",
+              "users": [
+                "65d62d46a55ef251fe5c5a72",
+                "65d4f12e7a36310309c6554f",
+                "65d7823ec3e4b9742feefef6",
+                "65d4f12e7a36310309c6554f"
+              ]
+            },
+            {
+              "_id": "639b6de9ff77d221f190c55f",
+              "drink": "Jamaica Kiss",
+              "drinkAlternate": "Sorry, not specified",
+              "tags": "popular,  tropical,  creamy,  sweet,  coffee,  milk,  rum,  liqueur,  ice,  blender,  hurricane glass,  shake",
+              "video": "Sorry, not specified",
+              "category": "Shake",
+              "IBA": "Sorry, not specified",
+              "alcoholic": "Alcoholic",
+              "glass": "Hurricane glass",
+              "description": "Jamaica Kiss is a sweet and tangy cocktail that brings a taste of the Caribbean to your glass. It is made with Jamaican rum, lime juice, grenadine, and a splash of soda water. The combination of flavors creates a tropical and refreshing drink that is perfect for sipping on a hot summer day. Close your eyes, take a sip, and let the flavors transport you to a Jamaican beach.",
+              "instructions": "Fill a tumbler with ice cubes. Add a shot of Tia Maria and a shot of Jamaican light rum. Fill the tumbler with milk. Blend until smooth and serve immediately.",
+              "instructionsES": "Llena un vaso con cubitos de hielo. Agregue un trago de Tia Maria y un trago de ron ligero de Jamaica. Llene el vaso con leche. Mezcle hasta que quede suave y sirva de inmediato.",
+              "instructionsDE": "Füllen Sie einen Becher mit Eiswürfeln. Füge einen Schuss Tia Maria und einen Schuss jamaikanischen leichten Rum hinzu. Füllen Sie den Becher mit Milch. Mischen, bis sie glatt sind und sofort servieren.",
+              "instructionsFR": "Remplir un gobelet de glaçons. Ajoutez un coup de Tia Maria et un coup de rhum jamaïcain léger. Remplir le gobelet de lait. Mélanger jusqu'à consistance lisse et servir immédiatement.",
+              "instructionsIT": "Riempi un bicchiere con cubetti di ghiaccio.\r\nAggiungi un bicchierino di Tia Maria e un bicchierino di rum chiaro giamaicano.\r\nRiempi il bicchiere di latte.\r\nFrulla fino a ottenere un composto omogeneo e servi immediatamente.",
+              "instructionsRU": "Наполните стакан кубиками льда. Добавьте порцию Tia Maria и порцию ямайского светлого рома. Наполните стакан молоком. Смешайте до однородности и сразу подавайте.",
+              "instructionsPL": "Napełnij szklankę kostkami lodu. Dodaj kieliszek Tia Maria i kieliszek jamajskiego lekkiego rumu. Napełnij kubek mlekiem. Zmiksuj do uzyskania gładkości i natychmiast podawaj.",
+              "instructionsUK": "Наповніть стакан кубиками льоду. Додайте порцію Тіа Марії та порцію ямайського світлого рому. Наповніть стакан молоком. Перемішайте до однорідності та негайно подавайте.",
+              "drinkThumb": "https://ftp.goit.study/img/drinkify/recipes/Jamaica_Kiss.jpg",
+              "ingredients": [
+                {
+                  "_id": "65dcba2baaf7538be6b2393e",
+                  "title": "Coffee liqueur",
+                  "measure": "1 shot ",
+                  "ingredientId": "64aebb7f82d96cc69e0eb4b6"
+                },
+                {
+                  "_id": "65dcba2baaf7538be6b2393f",
+                  "title": "Light rum",
+                  "measure": "1 shot Jamaican ",
+                  "ingredientId": "64aebb7f82d96cc69e0eb4a4"
+                },
+                {
+                  "_id": "65dcba2baaf7538be6b23940",
+                  "title": "Ice",
+                  "measure": "cubes",
+                  "ingredientId": "64f1d5c169d8333cf130fb4d"
+                },
+                {
+                  "_id": "65dcba2baaf7538be6b23941",
+                  "title": "Milk",
+                  "ingredientId": "64aebb7f82d96cc69e0eb4d5"
+                }
+              ],
+              "shortDescription": "A sweet and tangy cocktail with Jamaican rum, lime juice, and grenadine.",
+              "updatedAt": "2024-02-22T14:46:01.696Z",
+              "favorite": [
+                "65d62d46a55ef251fe5c5a72",
+                "65d62d46a55ef251fe5c5a72",
+                "65d62d46a55ef251fe5c5a72"
+              ],
+              "users": ["65d7548b76e8af18b413fc1f"]
+            },
+            {
+              "_id": "639b6de9ff77d221f190c577",
+              "drink": "Dark Caipirinha",
+              "drinkAlternate": "Sorry, not specified",
+              "tags": "Sorry, not specified",
+              "video": "Sorry, not specified",
+              "category": "Cocktail",
+              "IBA": "Sorry, not specified",
+              "alcoholic": "Alcoholic",
+              "glass": "Highball glass",
+              "description": "Dark Caipirinha is a bold and flavorful cocktail that puts a twist on the classic Caipirinha. It is made with cachaça, lime, and brown sugar. Instead of using white sugar, the dark caipirinha uses brown sugar, which adds a rich and caramelized flavor to the drink. It is muddled together until the sugar is dissolved and then served over ice. The result is a robust and satisfying cocktail that is perfect for those who enjoy stronger flavors.",
+              "instructions": "Muddle the sugar into the lime wedges in an old-fashioned glass.\r\nFill the glass with ice cubes.\r\nPour the cachaca into the glass.\r\nStir well.",
+              "instructionsES": "Triture el azúcar en los gajos de lima en un vaso antiguo.\r\nLlena el vaso con cubitos de hielo.\r\nVierta la cachaca en el vaso.\r\nRevuelva bien.",
+              "instructionsDE": "Den Zucker in einem old-fashioned Glas in die Limettenspalten mischen.",
+              "instructionsFR": "Écrasez le sucre dans les quartiers de citron vert dans un verre à l'ancienne.\r\nRemplir le verre de glaçons.\r\nVersez la cachaça dans le verre.\r\nBien mélanger.",
+              "instructionsIT": "Pestare lo zucchero con gli spicchi di lime in un bicchiere vecchio stile, riempire il bicchiere con cubetti di ghiaccio, versare la cachaca nel bicchiere e mescolare bene.",
+              "instructionsRU": "Смешайте сахар с дольками лайма в старомодном стакане.\r\nНаполните стакан кубиками льда.\r\nНалейте кашасу в стакан.\r\nРазмешайте как следует.",
+              "instructionsPL": "Ubij cukier w ćwiartkach limonki w staromodnym kieliszku.\r\nNapełnij szklankę kostkami lodu.\r\nWlej cachaca do szklanki.\r\nDobrze wymieszać.",
+              "instructionsUK": "Розмішайте цукор у шматочках лайма в старомодній склянці.\r\nНаповніть склянку кубиками льоду.\r\nНалийте кашаку в склянку.\r\nДобре розмішати.",
+              "drinkThumb": "https://ftp.goit.study/img/drinkify/recipes/Dark_Caipirinha.jpg",
+              "ingredients": [
+                {
+                  "_id": "65dcba2baaf7538be6b23942",
+                  "title": "demerara Sugar",
+                  "measure": "2 tsp ",
+                  "ingredientId": "64aebb7f82d96cc69e0eb4be"
+                },
+                {
+                  "_id": "65dcba2baaf7538be6b23943",
+                  "title": "Lime",
+                  "measure": "1",
+                  "ingredientId": "64aebb7f82d96cc69e0eb4db"
+                },
+                {
+                  "_id": "65dcba2baaf7538be6b23944",
+                  "title": "Cachaca",
+                  "measure": "2 1/2 oz",
+                  "ingredientId": "64f1d5c469d8333cf130fb81"
+                }
+              ],
+              "shortDescription": "A bold and flavorful cocktail with cachaça, lime, and brown sugar.",
+              "updatedAt": "2024-02-23T18:09:03.734Z",
+              "users": ["65d62d46a55ef251fe5c5a72", "65d5087e22495b9af191abd9"]
+            },
+            {
+              "_id": "639b6de9ff77d221f190c522",
+              "drink": "Addison",
+              "drinkAlternate": "Sorry, not specified",
+              "tags": "Sorry, not specified",
+              "video": "Sorry, not specified",
+              "category": "Cocktail",
+              "IBA": "Sorry, not specified",
+              "alcoholic": "Alcoholic",
+              "glass": "Martini Glass",
+              "description": "Addison is a sophisticated and elegant cocktail that combines the flavors of gin, vermouth, and orange bitters. It is made by stirring the ingredients with ice and straining it into a glass. The result is a smooth and well-balanced drink with a hint of bitterness and a touch of sweetness. Sip on this refined cocktail and appreciate the art of mixology.",
+              "instructions": "Shake together all the ingredients and strain into a cold glass.",
+              "instructionsES": "Agitar todos los ingredientes y colar la mezcla en un vaso enfriado.",
+              "instructionsDE": "Alle Zutaten vermengen und in ein kaltes Glas abseihen.",
+              "instructionsFR": "Mélanger tous les ingrédients et filtrer dans un verre froid.",
+              "instructionsIT": "Shakerare insieme tutti gli ingredienti e filtrare in un bicchiere freddo.",
+              "instructionsRU": "Смешать все ингредиенты и процедить в холодный бокал.",
+              "instructionsPL": "Wymieszaj wszystkie składniki i przelej do zimnej szklanki.",
+              "instructionsUK": "Збовтайте всі інгредієнти і процідіть у холодну склянку.",
+              "drinkThumb": "https://ftp.goit.study/img/drinkify/recipes/Addison.jpg",
+              "ingredients": [
+                {
+                  "_id": "65dcba2baaf7538be6b23945",
+                  "title": "Gin",
+                  "measure": "1 1/2 shot ",
+                  "ingredientId": "64aebb7f82d96cc69e0eb4a6"
+                },
+                {
+                  "_id": "65dcba2baaf7538be6b23946",
+                  "title": "Vermouth",
+                  "measure": "1 1/2 shot ",
+                  "ingredientId": "64f1d5c569d8333cf130fb96"
+                }
+              ],
+              "shortDescription": "A sophisticated and elegant cocktail with gin, vermouth, and orange bitters.",
+              "updatedAt": "2024-02-23T18:28:05.428Z",
+              "users": ["65d7548b76e8af18b413fc1f"]
+            },
+            {
+              "_id": "639b6de9ff77d221f190c52f",
+              "drink": "Allegheny",
+              "drinkAlternate": "Sorry, not specified",
+              "tags": "Sorry, not specified",
+              "video": "Sorry, not specified",
+              "category": "Ordinary Drink",
+              "IBA": "Sorry, not specified",
+              "alcoholic": "Alcoholic",
+              "glass": "Cocktail glass",
+              "description": "Allegheny is a robust and smoky cocktail that combines the flavors of rye whiskey, amaro, and bitters. It is made by stirring the ingredients with ice and straining it into a glass. The result is a complex and satisfying drink with layers of flavors. The smokiness of the rye whiskey and the bitterness of the amaro create a unique and memorable experience for your taste buds.",
+              "instructions": "Shake all ingredients (except lemon peel) with ice and strain into a cocktail glass. Top with the twist of lemon peel and serve.",
+              "instructionsES": "Agite todos los ingredientes (excepto el twist de limón) con hielo y cuele en un vaso de cóctel. Cubra con el twist de limón y sirva.",
+              "instructionsDE": "Alle Zutaten (außer Zitronenschale) mit Eis schütteln und in ein Cocktailglas abseihen. Mit der Drehung der Zitronenschale garnieren und servieren.",
+              "instructionsFR": "Shaker tous les ingrédients (sauf le zeste de citron) avec de la glace et filtrer dans un verre à cocktail. Garnir d'un zeste de citron et servir.",
+              "instructionsIT": "Shakerare tutti gli ingredienti (tranne la buccia di limone) con ghiaccio e filtrare in una coppetta da cocktail.Completare con la scorza di limone e servire.",
+              "instructionsRU": "Все ингредиенты (кроме цедры лимона) взболтать со льдом и процедить в коктейльный бокал. Сверху посыпьте цедрой лимона и подавайте.",
+              "instructionsPL": "Wszystkie składniki (oprócz skórki cytryny) wstrząśnij lodem i przelej do kieliszka koktajlowego. Udekoruj skórką z cytryny i podawaj.",
+              "instructionsUK": "Збовтати всі інгредієнти (крім цедри лимона) з льодом і процідити в келих для коктейлю. Зверху посипте скибкою лимонної цедри та подавайте.",
+              "drinkThumb": "https://ftp.goit.study/img/drinkify/recipes/Allegheny.jpg",
+              "ingredients": [
+                {
+                  "_id": "65dcba2baaf7538be6b23947",
+                  "title": "Dry Vermouth",
+                  "measure": "1 oz ",
+                  "ingredientId": "64aebb7f82d96cc69e0eb4b2"
+                },
+                {
+                  "_id": "65dcba2baaf7538be6b23948",
+                  "title": "Bourbon",
+                  "measure": "1 oz ",
+                  "ingredientId": "64aebb7f82d96cc69e0eb4b7"
+                },
+                {
+                  "_id": "65dcba2baaf7538be6b23949",
+                  "title": "Blackberry brandy",
+                  "measure": "1 1/2 tsp ",
+                  "ingredientId": "64aebb7f82d96cc69e0eb505"
+                },
+                {
+                  "_id": "65dcba2baaf7538be6b2394a",
+                  "title": "Lemon juice",
+                  "measure": "1 1/2 tsp ",
+                  "ingredientId": "64aebb7f82d96cc69e0eb4d3"
+                },
+                {
+                  "_id": "65dcba2baaf7538be6b2394b",
+                  "title": "Lemon peel",
+                  "measure": "1 twist of ",
+                  "ingredientId": "64f1d5c569d8333cf130fb9a"
+                }
+              ],
+              "shortDescription": "A robust and smoky cocktail with rye whiskey, amaro, and bitters.",
+              "updatedAt": "2024-02-23T17:48:18.152Z",
+              "users": ["65d4f12e7a36310309c6554f", "65d7823ec3e4b9742feefef6"]
+            },
+            {
+              "_id": "639b6de9ff77d221f190c53e",
+              "drink": "3 Wise Men",
+              "drinkAlternate": "Sorry, not specified",
+              "tags": "Sorry, not specified",
+              "video": "Sorry, not specified",
+              "category": "Shot",
+              "IBA": "Sorry, not specified",
+              "alcoholic": "Alcoholic",
+              "glass": "Collins glass",
+              "description": "3 Wise Men is a strong and potent cocktail that gets its name from the three different spirits used in its preparation. This bold drink combines equal parts of whiskey, tequila, and rum, resulting in a robust and intense beverage. The 3 Wise Men cocktail is not for the faint of heart and is best enjoyed by those who appreciate a strong drink with a kick.",
+              "instructions": "put them them in a glass... and slam it to tha head.",
+              "instructionsES": "ponlos en un vaso... y golpéalo en la cabeza.",
+              "instructionsDE": "In ein Glas geben... und ab in den Schädel.",
+              "instructionsFR": "mettez-les dans un verre... et claquez-le sur la tête.",
+              "instructionsIT": "mettetele in un bicchiere ... E buona fortuna!",
+              "instructionsRU": "положи их в стакан... и стукни им по голове.",
+              "instructionsPL": "włóż je do szklanki... i uderz w głowę.",
+              "instructionsUK": "покладіть їх у склянку... і вдарте нею по голові.",
+              "drinkThumb": "https://ftp.goit.study/img/drinkify/recipes/3_Wise_Men.jpg",
+              "ingredients": [
+                {
+                  "_id": "65dcba2baaf7538be6b2394c",
+                  "title": "Jack Daniels",
+                  "measure": "1/3 oz ",
+                  "ingredientId": "64f1d5c769d8333cf130fbc2"
+                },
+                {
+                  "_id": "65dcba2baaf7538be6b2394d",
+                  "title": "Johnnie Walker",
+                  "measure": "1/3 oz ",
+                  "ingredientId": "64aebb7f82d96cc69e0eb4ee"
+                },
+                {
+                  "_id": "65dcba2baaf7538be6b2394e",
+                  "title": "Jim Beam",
+                  "measure": "1/3 oz ",
+                  "ingredientId": "64f1d5c769d8333cf130fbc5"
+                }
+              ],
+              "shortDescription": "A strong and potent cocktail made with a combination of three different spirits.",
+              "updatedAt": "2024-02-24T18:48:17.490Z",
+              "users": ["65d8ee047cb07237b4796dbf"]
+            },
+            {
+              "_id": "639b6de9ff77d221f190c542",
+              "drink": "Paradise",
+              "drinkAlternate": "Sorry, not specified",
+              "tags": "IBA",
+              "video": "https://www.youtube.com/watch?v=vu1rVWo4rQ8",
+              "category": "Ordinary Drink",
+              "IBA": "Unforgettables",
+              "alcoholic": "Alcoholic",
+              "glass": "Cocktail glass",
+              "description": "Paradise is a tropical and exotic cocktail that combines the flavors of gin, apricot brandy, and orange juice. This vibrant drink captures the essence of paradise with its fruity and refreshing profile. Sip on a Paradise cocktail and let the tropical flavors transport you to a sunny beach, surrounded by palm trees and gentle ocean breezes.",
+              "instructions": "Shake together over ice. Strain into cocktail glass and serve chilled.",
+              "instructionsES": "Agitar juntos sobre hielo. Colar en una copa de cóctel y servir frío.",
+              "instructionsDE": "Zusammen über Eis schütteln. In ein Cocktailglas abseihen und gekühlt servieren.",
+              "instructionsFR": "Agiter ensemble sur de la glace. Versez dans un verre à cocktail et servez frais.",
+              "instructionsIT": "Shakerare tutti gli ingredienti insieme al ghiaccio. Filtrare nella coppetta da cocktail e servire freddo.",
+              "instructionsRU": "Взболтайте вместе со льдом. Процедите в коктейльный бокал и подавайте охлажденным.",
+              "instructionsPL": "Wstrząsnąć razem na lodzie. Odcedź do kieliszka koktajlowego i podawaj schłodzone.",
+              "instructionsUK": "Струсніть разом над льодом. Процідіть у келих для коктейлю та подавайте охолодженим.",
+              "drinkThumb": "https://ftp.goit.study/img/drinkify/recipes/Paradise.jpg",
+              "ingredients": [
+                {
+                  "_id": "65dcba2baaf7538be6b2394f",
+                  "title": "Gin",
+                  "measure": "7 parts",
+                  "ingredientId": "64aebb7f82d96cc69e0eb4a6"
+                },
+                {
+                  "_id": "65dcba2baaf7538be6b23950",
+                  "title": "Apricot Brandy",
+                  "measure": "4 parts",
+                  "ingredientId": "64aebb7f82d96cc69e0eb4ab"
+                },
+                {
+                  "_id": "65dcba2baaf7538be6b23951",
+                  "title": "Orange Juice",
+                  "measure": "3 parts ",
+                  "ingredientId": "64f1d5c669d8333cf130fbac"
+                }
+              ],
+              "shortDescription": "A tropical and exotic cocktail with the flavors of gin, apricot brandy, and orange juice.",
+              "updatedAt": "2024-02-24T21:25:07.806Z",
+              "users": ["65d8ee047cb07237b4796dbf"]
+            },
+            {
+              "_id": "639b6de9ff77d221f190c571",
+              "drink": "Dry Martini",
+              "drinkAlternate": "Sorry, not specified",
+              "tags": "IBA,Classic,Christmas,Alcoholic",
+              "video": "Sorry, not specified",
+              "category": "Cocktail",
+              "IBA": "Unforgettables",
+              "alcoholic": "Alcoholic",
+              "glass": "Cocktail glass",
+              "description": "Dry Martini is a sophisticated and timeless cocktail that has been a favorite among cocktail enthusiasts for decades. This classic drink is made by mixing gin with dry vermouth and garnishing it with a twist of lemon or an olive. The result is a crisp and elegant cocktail with a perfect balance of botanical flavors. Enjoy a Dry Martini and embrace the sophistication of this iconic drink.",
+              "instructions": "Straight: Pour all ingredients into mixing glass with ice cubes. Stir well. Strain in chilled martini cocktail glass. Squeeze oil from lemon peel onto the drink, or garnish with olive.",
+              "instructionsES": "Recto: Vierta todos los ingredientes en un vaso mezclador con cubitos de hielo. Revuelva bien. Cuele en una copa de cóctel de martini fría. Exprima el aceite de la cáscara de limón en la bebida o adorne con aceitunas.",
+              "instructionsDE": "Pur: Alle Zutaten in ein Rührglas mit Eiswürfeln geben. Gut umrühren. In ein gekühltes Martini-Cocktailglas abseihen. Öl aus der Zitronenschale auf das Getränk pressen oder mit Oliven garnieren.",
+              "instructionsFR": "Droit : Verser tous les ingrédients dans un verre à mélange avec des glaçons. Bien mélanger. Filtrer dans un verre à cocktail à martini refroidi. Pressez l'huile du zeste de citron sur la boisson ou garnissez d'olive.",
+              "instructionsIT": "Dritto: Versare tutti gli ingredienti nel mixing glass con cubetti di ghiaccio. Mescolare bene. Filtrare in una coppetta da cocktail Martini ghiacciata. Spremi l'olio della scorza di limone sulla bevanda o guarnisci con l'oliva.",
+              "instructionsRU": "Прямо: Налейте все ингредиенты в стакан для смешивания с кубиками льда. Размешайте как следует. Процедить в охлажденный коктейльный бокал для мартини. Выдавите на напиток масло из цедры лимона или украсьте оливкой.",
+              "instructionsPL": "Prosto: Wlej wszystkie składniki do szklanki z kostkami lodu. Dobrze wymieszać. Odcedź w schłodzonym kieliszku koktajlowym martini. Wyciśnij olej ze skórki cytryny na napój lub udekoruj oliwą.",
+              "instructionsUK": "Прямо: налийте всі інгредієнти в склянку для змішування з кубиками льоду. Добре розмішати. Процідити в охолоджений келих для мартіні. На напій вичавити масло з цедри лимона або прикрасити оливковою.",
+              "drinkThumb": "https://ftp.goit.study/img/drinkify/recipes/Dry_Martini.jpg",
+              "ingredients": [
+                {
+                  "_id": "65dcba2baaf7538be6b23952",
+                  "title": "Gin",
+                  "measure": "1 2/3 oz ",
+                  "ingredientId": "64aebb7f82d96cc69e0eb4a6"
+                },
+                {
+                  "_id": "65dcba2baaf7538be6b23953",
+                  "title": "Dry Vermouth",
+                  "measure": "1/3 oz ",
+                  "ingredientId": "64aebb7f82d96cc69e0eb4b2"
+                },
+                {
+                  "_id": "65dcba2baaf7538be6b23954",
+                  "title": "Olive",
+                  "measure": "1 ",
+                  "ingredientId": "64f1d5c969d8333cf130fbe0"
+                }
+              ],
+              "shortDescription": "A sophisticated and timeless cocktail made with gin and dry vermouth.",
+              "updatedAt": "2024-02-26T05:55:51.188Z",
+              "users": []
+            }
+          ],
+          "count": 468
         }
       }
     },
