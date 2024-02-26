@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
-// const ObjectId = mongoose.Types.ObjectId;
+const { nanoid } = "@reduxjs/toolkit";
+const cloudinary = require("cloudinary").v2;
 const { ctrlWrapper, HttpError } = require("../helpers");
 const Recipe = require("../models/Recipe");
 const Ingredient = require("../models/Ingredient");
@@ -80,18 +81,60 @@ const getById = async (req, res, next) => {
 	res.json(result);
 };
 
-const addOwnDrink = async (req, res) => {
-	const { _id: owner } = req.user;
-	try {
-		const result = await Recipe.create({
-			...req.body,
-			owner,
-			ingredients: JSON.parse(req.body.ingredients),
-		});
-		res.status(201).json(result);
-	} catch (error) {
-		res.status(400).json({ message: error.message });
+const addOwnDrink = async (req, res, next) => {
+	const { file } = req;
+	const uniqueFilename = nanoid();
+	const extension = path.extname(file.originalname);
+	const fileName = `${uniqueFilename}${extension}`;
+
+	const resultfromCloud = await cloudinary.uploader.upload(file.path, {
+		public_id: `${fileName}`,
+		folder: "cocktail",
+		use_filename: true,
+		unique_filename: false,
+		overwrite: true,
+	});
+
+	await cloudinary.uploader.destroy(file.filename);
+
+	const imageDrinkUrl = resultfromCloud.secure_url;
+
+	const { _id: owner, age } = req.user;
+
+	const {
+		drink,
+		description,
+		category,
+		glass,
+		alcoholic,
+		instructions,
+		ingredients,
+	} = req.body;
+
+	if (alcoholic === "Alcoholic" && age < 18) {
+		throw HttpError(400);
 	}
+	const newDrink = new Recipe({
+		drink,
+		description,
+		category,
+		glass,
+		alcoholic,
+		instructions,
+		drinkThumb: imageDrinkUrl,
+		ingredients: ingredients.map(({ title, measure, ingredientId }) => ({
+			title,
+			measure,
+			ingredientId,
+		})),
+		owner: owner,
+	});
+
+	const firstResult = await Recipe.create(newDrink);
+	const updatedResult = await Recipe.findById(firstResult._id).select(
+		"-createdAt -updatedAt"
+	);
+	res.status(201).json(updatedResult);
 };
 
 const getOwnDrink = async (req, res) => {
