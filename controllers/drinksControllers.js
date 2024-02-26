@@ -16,8 +16,7 @@ const getAll = async (req, res) => {
 	} else {
 		filter.alcoholic = "Alcoholic";
 	}
-	// const result = await Recipe.find(filter);
-
+	
 	const limit = 200;
 	const result = await Recipe.aggregate([
 		{ $match: filter },
