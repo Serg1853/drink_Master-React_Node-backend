@@ -9,7 +9,10 @@ const subscriptionList = [
 const signupSchema = Joi.object({
 	name: Joi.string().required(),
 	email: Joi.string().pattern(emailRegexp).required().messages({
-		"any.required": "missing required email field, example: ivan@gmail.com",
+		"string.base": "The email must be a string.",
+		"any.required": "The email field is required.",
+		"string.empty": "The email must not be empty.",
+		"string.pattern.base": "The email must be in format alex@gmail.com.",
 	}),
 	age: Joi.number().integer().required().messages({
 		"number.base": "age must be a number",
