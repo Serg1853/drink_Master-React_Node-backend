@@ -1,11 +1,8 @@
-const mongoose = require("mongoose");
 const path = require("path");
 const { nanoid } = require("@reduxjs/toolkit");
 const cloudinary = require("cloudinary").v2;
 const { ctrlWrapper, HttpError } = require("../helpers");
 const Recipe = require("../models/Recipe");
-const Ingredient = require("../models/Ingredient");
-const { User } = require("../models/User");
 
 const getAll = async (req, res) => {
 	const { age } = req.user;
@@ -16,7 +13,6 @@ const getAll = async (req, res) => {
 	} else {
 		filter.alcoholic = "Alcoholic";
 	}
-	// const result = await Recipe.find(filter);
 
 	const limit = 200;
 	const result = await Recipe.aggregate([
@@ -42,7 +38,6 @@ const findDrinkByFiltrs = async (req, res) => {
 			};
 		}
 	}
-	//   const age = 29;
 	let searchFilters = { ...paramSearch, alcoholic: "Non alcoholic" };
 	if (age > 18) {
 		searchFilters = { ...paramSearch };

@@ -1,6 +1,6 @@
 const authenticate = require("./authenticate");
 const isEmptyBody = require("./isEmptyBody");
-const isValiId = require("./isValidId");
+const isValidId = require("./isValidId");
 const storage = require("./upload");
 const validateBody = require("./validateBody");
 const uploadDrinkImage = require("./uploadDrinkImage");
@@ -10,6 +10,6 @@ module.exports = {
 	isEmptyBody,
 	authenticate,
 	storage,
-	isValiId,
+	isValidId,
 	uploadDrinkImage,
 };

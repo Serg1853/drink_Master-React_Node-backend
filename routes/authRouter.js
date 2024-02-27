@@ -1,10 +1,6 @@
 const express = require("express");
-const { validateBody, authenticate } = require("../middlewares/");
-const {
-	signupSchema,
-	signinSchema,
-	subscriptionListSchema,
-} = require("../schemas/userSchemas");
+const { validateBody, authenticate, isEmptyBody } = require("../middlewares/");
+const { signupSchema, signinSchema } = require("../schemas/userSchemas");
 
 const {
 	signupUser,
@@ -14,9 +10,9 @@ const {
 
 const authRouter = express.Router();
 
-authRouter.post("/signup", validateBody(signupSchema), signupUser);
+authRouter.post("/signup", isEmptyBody, validateBody(signupSchema), signupUser);
 
-authRouter.post("/signin", validateBody(signinSchema), signinUser);
+authRouter.post("/signin", isEmptyBody, validateBody(signinSchema), signinUser);
 
 authRouter.post("/signout", authenticate, signoutUser);
 
