@@ -5,6 +5,7 @@ const {
 	validateBody,
 	authenticate,
 	uploadDrinkImage,
+	isValidId,
 } = require("../middlewares");
 const addDrinkSchema = require("../schemas/addDrinkSchema");
 
@@ -35,16 +36,21 @@ drinksRouter.post(
 	addOwnDrink
 );
 
-drinksRouter.delete("/own/remove/:id", authenticate, removeOwnDrink);
+drinksRouter.delete("/own/remove/:id", authenticate, isValidId, removeOwnDrink);
 
 drinksRouter.get("/own", authenticate, getOwnDrink);
 
 drinksRouter.get("/favorite", authenticate, getFavorite);
 
-drinksRouter.post("/favorite/add/:id", authenticate, addFavorite);
+drinksRouter.post("/favorite/add/:id", authenticate, isValidId, addFavorite);
 
-drinksRouter.delete("/favorite/remove/:id", authenticate, deleteFavorite);
+drinksRouter.delete(
+	"/favorite/remove/:id",
+	authenticate,
+	isValidId,
+	deleteFavorite
+);
 
-drinksRouter.get("/:id", authenticate, getById);
+drinksRouter.get("/:id", authenticate, isValidId, getById);
 
 module.exports = drinksRouter;

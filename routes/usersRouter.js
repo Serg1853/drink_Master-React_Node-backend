@@ -11,7 +11,12 @@ const usersRouter = express.Router();
 
 usersRouter.get("/current", authenticate, getCurrent);
 
-usersRouter.patch("/update",storage.single("avatarURL"), authenticate, updateUser);
+usersRouter.patch(
+	"/update",
+	storage.single("avatarURL"),
+	authenticate,
+	updateUser
+);
 
 usersRouter.patch(
 	"/",
