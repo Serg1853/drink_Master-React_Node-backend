@@ -1,9 +1,8 @@
 const express = require("express");
 const {
-	getCurrent,
-	updateSubscription,
-	updateUser,
-	updateUserAvatar,
+  getCurrent,
+  updateSubscription,
+  updateUser,
 } = require("../controllers/userControllers");
 const { validateBody, authenticate, storage } = require("../middlewares/");
 const { subscriptionListSchema } = require("../schemas/userSchemas");
