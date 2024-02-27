@@ -30,7 +30,7 @@ drinksRouter.get("/search", authenticate, findDrinkByFiltrs);
 drinksRouter.post(
 	"/own/add",
 	authenticate,
-	uploadDrinkImage.single("drinKThumb"),
+	uploadDrinkImage.single("drinkThumb"),
 	validateBody(addDrinkSchema),
 	addOwnDrink
 );
