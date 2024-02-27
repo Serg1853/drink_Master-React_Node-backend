@@ -86,7 +86,6 @@ const addOwnDrink = async (req, res, next) => {
 	const uniqueFilename = nanoid();
 	const extension = path.extname(file.originalname);
 	const fileName = `${uniqueFilename}${extension}`;
-
 	const resultfromCloud = await cloudinary.uploader.upload(file.path, {
 		public_id: `${fileName}`,
 		folder: "drink",
@@ -94,26 +93,15 @@ const addOwnDrink = async (req, res, next) => {
 		unique_filename: false,
 		overwrite: true,
 	});
-
 	await cloudinary.uploader.destroy(file.filename);
-
 	const imageDrinkUrl = resultfromCloud.secure_url;
-
 	const { _id: owner, age } = req.user;
-
-	const {
-		drink,
-		description,
-		category,
-		glass,
-		alcoholic,
-		instructions,
-		ingredients,
-	} = req.body;
-
+	const { drink, description, category, glass, alcoholic, instructions } =
+		req.body;
 	if (alcoholic === "Alcoholic" && age < 18) {
 		throw HttpError(400);
 	}
+	const ingredients = JSON.parse(req.body.ingredients);
 	const newDrink = new Recipe({
 		drink,
 		description,
@@ -129,10 +117,9 @@ const addOwnDrink = async (req, res, next) => {
 		})),
 		owner: owner,
 	});
-
 	const firstResult = await Recipe.create(newDrink);
 	const updatedResult = await Recipe.findById(firstResult._id).select(
-		"-createdAt -updatedAt"
+		" -createdAt -updatedAt"
 	);
 	res.status(201).json(updatedResult);
 };
